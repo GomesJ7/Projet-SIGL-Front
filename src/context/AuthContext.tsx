@@ -1,62 +1,87 @@
 import { createContext, useContext, useState } from "react";
+import api from "../api/axiosConfig";
 
 const AuthContext = createContext<any>(null);
 
-// Mock users database
-const USERS = {
-  admin: {
-    login: "admin",
-    password: "password",
-    role: "admin",
-    name: "Administrateur"
-  },
-  teacher: {
-    login: "teacher",
-    password: "password",
-    role: "teacher",
-    name: "Enseignant"
-  },
-  student: {
-    login: "student",
-    password: "password",
-    role: "student",
-    name: "Étudiant"
-  }
-};
-
 export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const login = (loginStr: string, password: string) => {
-    // Vérifier les identifiants
-    const userKey = Object.keys(USERS).find(
-      key => USERS[key as keyof typeof USERS].login === loginStr && 
-             USERS[key as keyof typeof USERS].password === password
-    );
+  const login = async (email: string, motDePasse: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await api.post("/auth/login", {
+        email,
+        motDePasse
+      });
 
-    if (userKey) {
-      const foundUser = USERS[userKey as keyof typeof USERS];
+      const { token, type, email: userEmail, nom, prenom, role, idUtilisateur } = response.data;
+
+      // Sauvegarder le token
+      localStorage.setItem("token", token);
+      localStorage.setItem("tokenType", type);
+
+      // Préparer les données utilisateur
       const userData = {
-        login: foundUser.login,
-        role: foundUser.role,
-        name: foundUser.name
+        idUtilisateur,
+        email: userEmail,
+        nom,
+        prenom,
+        role: convertRoleToFrontend(role) // Convertir le rôle backend au format frontend
       };
-      localStorage.setItem("token", "mock-token-" + foundUser.login);
+
       localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
       return true;
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.message || 
+                      err.response?.data?.error || 
+                      "Identifiants invalides ou serveur indisponible";
+      setError(errorMsg);
+      console.error("Erreur de connexion:", err);
+      return false;
+    } finally {
+      setLoading(false);
     }
-    return false;
+  };
+
+  const convertRoleToFrontend = (backendRole: string): string => {
+    // Convertir les rôles du backend (ADMIN, ENSEIGNANT, APPRENANT) 
+    // au format frontend (admin, teacher, student)
+    const roleMap: { [key: string]: string } = {
+      "ADMIN": "admin",
+      "ENSEIGNANT": "teacher",
+      "APPRENANT": "student"
+    };
+    return roleMap[backendRole] || backendRole.toLowerCase();
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("tokenType");
     localStorage.removeItem("user");
     setUser(null);
+    setError(null);
+  };
+
+  // Charger l'utilisateur depuis le localStorage au démarrage
+  const initAuth = () => {
+    const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("token");
+    
+    if (storedUser && storedToken) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (err) {
+        logout();
+      }
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, loading, error, initAuth }}>
       {children}
     </AuthContext.Provider>
   );

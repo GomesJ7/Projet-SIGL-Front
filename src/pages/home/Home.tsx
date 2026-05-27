@@ -1,9 +1,27 @@
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import logoESEO from "../../images/ESEO.jpeg";
 import "../../css/Home.css";
 
 const Home = () => {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    if (window.confirm("Êtes-vous sûr de vouloir vous déconnecter ?")) {
+      logout();
+      navigate("/login");
+    }
+  };
+
+  const getRoleLabel = (role: string): string => {
+    const roleLabels: { [key: string]: string } = {
+      admin: "👨‍💼 Administrateur",
+      teacher: "👨‍🏫 Enseignant",
+      student: "🎓 Apprenant"
+    };
+    return roleLabels[role] || role;
+  };
 
   return (
     <div className="home-container">
@@ -16,12 +34,30 @@ const Home = () => {
           />
           <h2>HIGH SCHOOL</h2>
         </div>
-        <button
-          onClick={() => navigate("/login")}
-          className="home-nav-button"
-        >
-          Connexion
-        </button>
+        <div className="home-nav-actions">
+          {user ? (
+            <div className="home-nav-user">
+              <div className="home-user-info">
+                <span className="home-user-name">{user.prenom} {user.nom}</span>
+                <span className="home-user-role">{getRoleLabel(user.role)}</span>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="home-nav-logout-button"
+                title="Se déconnecter"
+              >
+                🚪 Déconnexion
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => navigate("/login")}
+              className="home-nav-button"
+            >
+              Connexion
+            </button>
+          )}
+        </div>
       </nav>
 
       {/* Hero Section */}
@@ -30,18 +66,43 @@ const Home = () => {
           src={logoESEO}
           alt="Logo HIGH SCHOOL"
         />
-        <h1>
-          Bienvenue à HIGH SCHOOL
-        </h1>
-        <p>
-          Plateforme de gestion académique complète pour notre établissement
-        </p>
-        <button
-          onClick={() => navigate("/login")}
-          className="home-hero-button"
-        >
-          Accéder à la plateforme
-        </button>
+        {user ? (
+          <>
+            <h1>
+              Bienvenue, {user.prenom} {user.nom} !
+            </h1>
+            <p>
+              Vous êtes connecté en tant que <strong>{getRoleLabel(user.role)}</strong>
+            </p>
+            <div className="home-user-details">
+              <div className="home-detail-card">
+                <span className="detail-label">Email :</span>
+                <span className="detail-value">{user.email}</span>
+              </div>
+              <div className="home-detail-card">
+                <span className="detail-label">ID Utilisateur :</span>
+                <span className="detail-value">#{user.idUtilisateur}</span>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <h1>
+              Bienvenue à HIGH SCHOOL
+            </h1>
+            <p>
+              Plateforme de gestion académique complète pour notre établissement
+            </p>
+          </>
+        )}
+        {!user && (
+          <button
+            onClick={() => navigate("/login")}
+            className="home-hero-button"
+          >
+            Accéder à la plateforme
+          </button>
+        )}
       </section>
 
       {/* Features Section */}
@@ -154,17 +215,22 @@ const Home = () => {
       {/* CTA Section */}
       <section className="home-cta">
         <h2>
-          Prêt à rejoindre HIGH SCHOOL ?
+          {user ? "Accédez à votre tableau de bord" : "Prêt à rejoindre HIGH SCHOOL ?"}
         </h2>
         <p>
-          Accédez à la plateforme pour gérer votre parcours académique
+          {user 
+            ? "Naviguez vers les différentes sections de la plateforme selon votre rôle"
+            : "Accédez à la plateforme pour gérer votre parcours académique"
+          }
         </p>
-        <button
-          onClick={() => navigate("/login")}
-          className="home-cta-button"
-        >
-          Se Connecter
-        </button>
+        {!user && (
+          <button
+            onClick={() => navigate("/login")}
+            className="home-cta-button"
+          >
+            Se Connecter
+          </button>
+        )}
       </section>
 
       {/* Footer */}
