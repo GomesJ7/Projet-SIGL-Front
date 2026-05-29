@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import logoESEO from "../../images/ESEO.jpeg";
+import logoESEO from "../../images/ESEO.png";
 import "../../css/Home.css";
 
 const Home = () => {
