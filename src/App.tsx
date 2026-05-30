@@ -6,6 +6,10 @@ import Login from "./pages/auth/Login";
 import Administrateur from "./pages/administrateur/Administrateur";
 import Enseignant from "./pages/enseignant/Enseignant";
 import Apprenant from "./pages/apprenant/Apprenant";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminStages from "./pages/admin/AdminStages";
+import AdminCompanies from "./pages/admin/AdminCompanies";
+import AdminDefenses from "./pages/admin/AdminDefenses";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -24,6 +28,44 @@ function App() {
 
                 <Route path="/login" element={<Login />} />
 
+                {/* Pages Admin CRUD */}
+                <Route
+                    path="/admin/users"
+                    element={
+                        <ProtectedRoute>
+                            <AdminUsers />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/admin/stages"
+                    element={
+                        <ProtectedRoute>
+                            <AdminStages />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/admin/companies"
+                    element={
+                        <ProtectedRoute>
+                            <AdminCompanies />
+                        </ProtectedRoute>
+                    }
+                />
+
+                <Route
+                    path="/admin/defenses"
+                    element={
+                        <ProtectedRoute>
+                            <AdminDefenses />
+                        </ProtectedRoute>
+                    }
+                />
+
+                {/* Pages Protégées par rôle */}
                 <Route
                     path="/administrateur"
                     element={

@@ -68,15 +68,20 @@ export const AuthProvider = ({ children }: any) => {
 
   // Charger l'utilisateur depuis le localStorage au démarrage
   const initAuth = () => {
-    const storedUser = localStorage.getItem("user");
-    const storedToken = localStorage.getItem("token");
-    
-    if (storedUser && storedToken) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (err) {
-        logout();
+    setLoading(true);
+    try {
+      const storedUser = localStorage.getItem("user");
+      const storedToken = localStorage.getItem("token");
+      
+      if (storedUser && storedToken) {
+        try {
+          setUser(JSON.parse(storedUser));
+        } catch (err) {
+          logout();
+        }
       }
+    } finally {
+      setLoading(false);
     }
   };
 

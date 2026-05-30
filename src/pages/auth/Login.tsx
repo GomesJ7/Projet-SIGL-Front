@@ -13,7 +13,7 @@ const Login = () => {
   // Redirection automatique si déjà connecté
   useEffect(() => {
     if (user) {
-      navigate("/");
+      navigate("/", { replace: true });
     }
   }, [user, navigate]);
 
@@ -21,8 +21,10 @@ const Login = () => {
     e.preventDefault();
     const success = await login(email, motDePasse);
     if (success) {
-      // Redirection à l'accueil après connexion
-      navigate("/");
+      // Redirection automatique à l'accueil après connexion réussie
+      setTimeout(() => {
+        navigate("/", { replace: true });
+      }, 300);
     }
   };
 
@@ -32,7 +34,7 @@ const Login = () => {
   };
 
   const handleHomeClick = () => {
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   return (
@@ -51,7 +53,7 @@ const Login = () => {
           <div className="login-logo-section">
             <img 
               src={logoESEO} 
-              alt="Logo HIGH SCHOOL" 
+              alt="Logo ES SCHOOL" 
               className="login-logo"
             />
             <h2 className="login-title">Connexion</h2>
