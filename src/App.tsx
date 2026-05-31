@@ -9,6 +9,7 @@ import { AuthProvider } from "./context/AuthContext";
 import ModulesFilieresManagement from "./pages/administrateur/ModulesFilieresManagement";
 import ApprenantManagement from "./pages/administrateur/ApprenantManagement";
 import EnseignantManagement from "./pages/administrateur/EnseignantManagement";
+import StageManagement from "./pages/administrateur/StageManagement";
 
 function App() {
     return (
@@ -52,6 +53,15 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <EnseignantManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/administrateur/stages"
+                        element={
+                            <ProtectedRoute>
+                                <StageManagement />
                             </ProtectedRoute>
                         }
                     />

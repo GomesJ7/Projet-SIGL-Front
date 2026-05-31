@@ -28,6 +28,10 @@ const Admin = () => {
     navigate("/administrateur/enseignants");
   };
 
+  const handleManageStages = () => {
+    navigate("/administrateur/stages");
+  };
+
   return (
     <div className="admin-container">
       <button onClick={handleHomeClick} className="admin-home-button" title="Retour à l'accueil">
@@ -84,7 +88,7 @@ const Admin = () => {
               <li>• Affectation encadrants</li>
               <li>• Suivi état (En cours/Terminé/Validé)</li>
             </ul>
-            <button className="admin-module-button">
+            <button className="admin-module-button" onClick={handleManageStages}>
               Gérer stages
             </button>
           </div>
