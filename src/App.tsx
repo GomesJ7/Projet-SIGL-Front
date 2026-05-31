@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import ModulesFilieresManagement from "./pages/administrateur/ModulesFilieresManagement";
 import ApprenantManagement from "./pages/administrateur/ApprenantManagement";
+import EnseignantManagement from "./pages/administrateur/EnseignantManagement";
 
 function App() {
     return (
@@ -42,6 +43,15 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <ApprenantManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/administrateur/enseignants"
+                        element={
+                            <ProtectedRoute>
+                                <EnseignantManagement />
                             </ProtectedRoute>
                         }
                     />
