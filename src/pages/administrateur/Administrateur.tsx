@@ -16,6 +16,14 @@ const Admin = () => {
     navigate("/");
   };
 
+  const handleManageModulesFilieres = () => {
+    navigate("/administrateur/modules-filieres");
+  };
+
+  const handleManageApprenants = () => {
+    navigate("/administrateur/apprenants");
+  };
+
   return (
     <div className="admin-container">
       <button onClick={handleHomeClick} className="admin-home-button" title="Retour à l'accueil">
@@ -44,7 +52,7 @@ const Admin = () => {
               <li>• Suivi académique</li>
               <li>• Historique des stages</li>
             </ul>
-            <button className="admin-module-button">
+            <button className="admin-module-button" onClick={handleManageApprenants}>
               Gérer apprenants
             </button>
           </div>
@@ -84,7 +92,7 @@ const Admin = () => {
               <li>• Créer/supprimer un module</li>
               <li>• Créer/supprimer une filière</li>
             </ul>
-            <button className="admin-module-button">
+            <button className="admin-module-button" onClick={handleManageModulesFilieres}>
               Gérer
             </button>
           </div>
