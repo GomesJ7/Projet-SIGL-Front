@@ -23,7 +23,7 @@ const AdminStages = () => {
     objectif: "",
     dateDebut: "",
     dateFin: "",
-    dureeeSemaines: 0,
+    duree_semaines: 0,
     etat: "EN_ATTENTE",
     idEntreprise: 0,
     idApprenant: 0,
@@ -93,7 +93,7 @@ const AdminStages = () => {
       objectif: stageData.objectif,
       dateDebut: stageData.dateDebut?.split('T')[0] || "",
       dateFin: stageData.dateFin?.split('T')[0] || "",
-      dureeeSemaines: stageData.dureeeSemaines,
+      duree_semaines: stageData.duree_semaines,
       etat: stageData.etat,
       idEntreprise: stageData.idEntreprise,
       idApprenant: stageData.idApprenant,
@@ -124,7 +124,7 @@ const AdminStages = () => {
       objectif: "",
       dateDebut: "",
       dateFin: "",
-      dureeeSemaines: 0,
+      duree_semaines: 0,
       etat: "EN_ATTENTE",
       idEntreprise: 0,
       idApprenant: 0,
@@ -202,8 +202,8 @@ const AdminStages = () => {
                 <label>Durée (semaines)</label>
                 <input
                   type="number"
-                  value={formData.dureeeSemaines}
-                  onChange={(e) => setFormData({...formData, dureeeSemaines: parseInt(e.target.value)})}
+                  value={formData.duree_semaines}
+                  onChange={(e) => setFormData({...formData, duree_semaines: parseInt(e.target.value)})}
                   min="1"
                   required
                 />

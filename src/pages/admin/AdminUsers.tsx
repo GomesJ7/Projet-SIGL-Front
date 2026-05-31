@@ -111,27 +111,57 @@ const AdminUsers = () => {
 
     try {
       if (editingUser) {
-        // Mise à jour : on route vers le bon endpoint selon le rôle de l'utilisateur édité
-        const payload = {
-          nom: formData.nom,
-          prenom: formData.prenom,
-          email: formData.email,
-          ...(formData.motDePasse ? { motDePasse: formData.motDePasse } : {}),
-          role: editingUser.role,
-        };
+        const roleChanged = formData.role !== editingUser.role;
 
-        switch (editingUser.role) {
-          case "APPRENANT":
-            await updateApprenantAPI(editingUser.idUtilisateur, payload);
-            break;
-          case "ENSEIGNANT":
-            await updateEnseignantAPI(editingUser.idUtilisateur, payload);
-            break;
-          case "ADMIN":
-            await updateAdminAPI(editingUser.idUtilisateur, payload);
-            break;
+        if (roleChanged) {
+          // Si le rôle change, supprimer l'ancien et créer un nouveau
+          await new Promise((resolve) => setTimeout(resolve, 100));
+          
+          // Supprimer l'utilisateur de l'ancienne table
+          switch (editingUser.role) {
+            case "APPRENANT":
+              await deleteApprenantAPI(editingUser.idUtilisateur);
+              break;
+            case "ENSEIGNANT":
+              await deleteEnseignantAPI(editingUser.idUtilisateur);
+              break;
+            case "ADMIN":
+              await deleteAdminAPI(editingUser.idUtilisateur);
+              break;
+          }
+
+          // Créer l'utilisateur avec le nouveau rôle
+          await createUserAPI({
+            nom: formData.nom,
+            prenom: formData.prenom,
+            email: formData.email,
+            motDePasse: formData.motDePasse || "TempPassword123!",
+            role: formData.role,
+          });
+          setSuccess("✅ Rôle de l'utilisateur changé avec succès");
+        } else {
+          // Mise à jour simple : on route vers le bon endpoint selon le rôle actuel
+          const payload = {
+            nom: formData.nom,
+            prenom: formData.prenom,
+            email: formData.email,
+            ...(formData.motDePasse ? { motDePasse: formData.motDePasse } : {}),
+            role: editingUser.role,
+          };
+
+          switch (editingUser.role) {
+            case "APPRENANT":
+              await updateApprenantAPI(editingUser.idUtilisateur, payload);
+              break;
+            case "ENSEIGNANT":
+              await updateEnseignantAPI(editingUser.idUtilisateur, payload);
+              break;
+            case "ADMIN":
+              await updateAdminAPI(editingUser.idUtilisateur, payload);
+              break;
+          }
+          setSuccess("✅ Utilisateur modifié avec succès");
         }
-        setSuccess("✅ Utilisateur modifié avec succès");
       } else {
         // Création via /auth/register — crée l'utilisateur ET la bonne sous-table JPA
         await createUserAPI({
@@ -324,26 +354,28 @@ const AdminUsers = () => {
                 />
               </div>
 
-              {/* Le rôle n'est modifiable qu'à la création */}
-              {!editingUser && (
-                <div className="form-group">
-                  <label>Rôle *</label>
-                  <select
-                    value={formData.role}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        role: e.target.value as RoleType,
-                      })
-                    }
-                    required
-                  >
-                    <option value="APPRENANT">🎓 Apprenant</option>
-                    <option value="ENSEIGNANT">👨‍🏫 Enseignant</option>
-                    <option value="ADMIN">👨‍💼 Administrateur</option>
-                  </select>
-                </div>
-              )}
+              <div className="form-group">
+                <label>Rôle *</label>
+                <select
+                  value={formData.role}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      role: e.target.value as RoleType,
+                    })
+                  }
+                  required
+                >
+                  <option value="APPRENANT">🎓 Apprenant</option>
+                  <option value="ENSEIGNANT">👨‍🏫 Enseignant</option>
+                  <option value="ADMIN">👨‍💼 Administrateur</option>
+                </select>
+                {editingUser && formData.role !== editingUser.role && (
+                  <small style={{ color: "#ff9800", display: "block", marginTop: 5 }}>
+                    ⚠️ Attention : changer le rôle va supprimer et recréer l'utilisateur
+                  </small>
+                )}
+              </div>
             </div>
 
             <div style={{ display: "flex", gap: 12 }}>

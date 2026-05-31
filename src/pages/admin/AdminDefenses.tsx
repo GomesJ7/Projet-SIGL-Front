@@ -1,17 +1,18 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { getDefensesAPI, createDefenseAPI, updateDefenseAPI, deleteDefenseAPI, getStagesAPI } from "../../api/adminAPI";
+import { getDefensesAPI, createDefenseAPI, updateDefenseAPI, deleteDefenseAPI, getStagesAPI, getJuriesAPI } from "../../api/adminAPI";
 import "../../css/Admin.css";
 
-// SoutenanceDto backend : { idSoutenance, dateSoutenance (LocalDateTime), noteFinale, idStage }
-const EMPTY = { dateSoutenance: "", noteFinale: "", idStage: 0 };
+// SoutenanceDto backend : { idSoutenance, dateSoutenance, salle, noteFinale, observation, idStage, idJury }
+const EMPTY = { dateSoutenance: "", salle: "", noteFinale: "", observation: "", idStage: 0, idJury: 0 };
 
 const AdminDefenses = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [defenses, setDefenses]   = useState<any[]>([]);
   const [stages, setStages]       = useState<any[]>([]);
+  const [juries, setJuries]       = useState<any[]>([]);
   const [loading, setLoading]     = useState(false);
   const [error, setError]         = useState<string | null>(null);
   const [success, setSuccess]     = useState<string | null>(null);
@@ -27,8 +28,8 @@ const AdminDefenses = () => {
   const load = useCallback(async () => {
     setLoading(true); setError(null);
     try {
-      const [dR, sR] = await Promise.all([getDefensesAPI(), getStagesAPI()]);
-      setDefenses(dR.data); setStages(sR.data);
+      const [dR, sR, jR] = await Promise.all([getDefensesAPI(), getStagesAPI(), getJuriesAPI()]);
+      setDefenses(dR.data); setStages(sR.data); setJuries(jR.data);
     } catch (e: any) { setError(e.response?.data?.message || "Erreur de chargement"); }
     finally { setLoading(false); }
   }, []);
@@ -40,8 +41,11 @@ const AdminDefenses = () => {
     // dateSoutenance doit être au format ISO LocalDateTime : "2025-06-15T10:00:00"
     const payload = {
       dateSoutenance: form.dateSoutenance ? form.dateSoutenance + ":00" : null,
+      salle: form.salle || null,
       noteFinale: form.noteFinale !== "" ? parseFloat(form.noteFinale) : null,
+      observation: form.observation || null,
       idStage: form.idStage || null,
+      idJury: form.idJury || null,
     };
     try {
       if (editing) {
@@ -60,8 +64,11 @@ const AdminDefenses = () => {
     setEditing(d);
     setForm({
       dateSoutenance: d.dateSoutenance ? d.dateSoutenance.slice(0, 16) : "",
+      salle: d.salle || "",
       noteFinale: d.noteFinale != null ? String(d.noteFinale) : "",
+      observation: d.observation || "",
       idStage: d.idStage || 0,
+      idJury: d.idJury || 0,
     });
     setShowForm(true); window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -79,6 +86,12 @@ const AdminDefenses = () => {
   const stageLabel = (idStage: number) => {
     const s = stages.find(st => st.idStage === idStage);
     return s ? `#${s.idStage} — ${s.poste}` : `Stage #${idStage}`;
+  };
+
+  const juryLabel = (idJury: number) => {
+    if (!idJury) return "—";
+    const j = juries.find(jr => jr.idJury === idJury);
+    return j ? j.nomJury : `Jury #${idJury}`;
   };
 
   if (user?.role !== "admin") return (
@@ -119,8 +132,23 @@ const AdminDefenses = () => {
                 <input type="datetime-local" value={form.dateSoutenance} onChange={e => setForm({ ...form, dateSoutenance: e.target.value })} required />
               </div>
               <div className="form-group">
+                <label>Salle</label>
+                <input type="text" value={form.salle} onChange={e => setForm({ ...form, salle: e.target.value })} placeholder="Ex: Salle 101" />
+              </div>
+              <div className="form-group">
+                <label>Jury</label>
+                <select value={form.idJury} onChange={e => setForm({ ...form, idJury: parseInt(e.target.value) })}>
+                  <option value="0">-- Sélectionner un jury --</option>
+                  {juries.map(j => <option key={j.idJury} value={j.idJury}>{j.nomJury}</option>)}
+                </select>
+              </div>
+              <div className="form-group">
                 <label>Note finale (0–20)</label>
                 <input type="number" value={form.noteFinale} onChange={e => setForm({ ...form, noteFinale: e.target.value })} min="0" max="20" step="0.5" placeholder="Ex : 15.5" />
+              </div>
+              <div className="form-group full-width">
+                <label>Observation</label>
+                <textarea value={form.observation} onChange={e => setForm({ ...form, observation: e.target.value })} placeholder="Remarques..." rows={2} />
               </div>
             </div>
             <div style={{ display: "flex", gap: 12 }}>
@@ -137,18 +165,21 @@ const AdminDefenses = () => {
           : (
             <div className="admin-table">
               <table>
-                <thead><tr><th>ID</th><th>Stage</th><th>Date & Heure</th><th>Note finale</th><th style={{ textAlign: "center" }}>Actions</th></tr></thead>
+                <thead><tr><th>ID</th><th>Stage</th><th>Date & Heure</th><th>Salle</th><th>Jury</th><th>Note</th><th>Observation</th><th style={{ textAlign: "center" }}>Actions</th></tr></thead>
                 <tbody>
                   {defenses.map(d => (
                     <tr key={d.idSoutenance}>
                       <td>#{d.idSoutenance}</td>
                       <td>{stageLabel(d.idStage)}</td>
                       <td>{d.dateSoutenance ? new Date(d.dateSoutenance).toLocaleString("fr-FR") : "—"}</td>
+                      <td>{d.salle || "—"}</td>
+                      <td>{juryLabel(d.idJury)}</td>
                       <td>
                         {d.noteFinale != null
                           ? <span style={{ fontWeight: 700, color: d.noteFinale >= 10 ? "#10b981" : "#ef4444" }}>{d.noteFinale}/20</span>
                           : <span style={{ color: "#aaa" }}>Non notée</span>}
                       </td>
+                      <td>{d.observation ? (d.observation.length > 30 ? d.observation.substring(0, 30) + "..." : d.observation) : "—"}</td>
                       <td className="actions">
                         <button onClick={() => handleEdit(d)} className="btn-edit" title="Modifier" disabled={loading}>✏️</button>
                         <button onClick={() => handleDelete(d)} className="btn-delete" title="Supprimer" disabled={loading}>🗑️</button>

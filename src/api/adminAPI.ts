@@ -56,3 +56,6 @@ export const updateDefenseAPI = (id: number, data: any) =>
   api.put(`/soutenances/${id}`, data);
 export const deleteDefenseAPI = (id: number) =>
   api.delete(`/soutenances/${id}`);
+
+// ===== JURIES =====
+export const getJuriesAPI = () => api.get("/juries");

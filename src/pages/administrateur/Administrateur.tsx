@@ -35,31 +35,20 @@ const Admin = () => {
         </div>
 
         <div className="admin-modules-grid">
-          {/* Gestion des Apprenants */}
+          {/* Gestion des Utilisateurs */}
           <div className="admin-module-card">
-            <h3>Gestion des Apprenants</h3>
+            <h3>Gestion des Utilisateurs</h3>
             <ul>
-              <li>• CRUD des apprenants</li>
-              <li>• Affectation filière/promotion</li>
-              <li>• Suivi académique</li>
-              <li>• Historique des stages</li>
+              <li>• CRUD complet des utilisateurs</li>
+              <li>• Modification des rôles</li>
+              <li>• Gestion des permissions</li>
+              <li>• Apprenants, Enseignants, Admins</li>
             </ul>
-            <button className="admin-module-button">
-              Gérer apprenants
-            </button>
-          </div>
-
-          {/* Gestion des Enseignants */}
-          <div className="admin-module-card">
-            <h3>Gestion des Enseignants</h3>
-            <ul>
-              <li>• Créer/modifier des enseignants</li>
-              <li>• Affectation aux modules</li>
-              <li>• Encadrement des stages</li>
-              <li>• Participation aux jurys</li>
-            </ul>
-            <button className="admin-module-button">
-              Gérer enseignants
+            <button 
+              className="admin-module-button"
+              onClick={() => navigate("/admin/users")}
+            >
+              Gérer utilisateurs
             </button>
           </div>
 
@@ -72,36 +61,11 @@ const Admin = () => {
               <li>• Affectation encadrants</li>
               <li>• Suivi état (En cours/Terminé/Validé)</li>
             </ul>
-            <button className="admin-module-button">
+            <button 
+              className="admin-module-button"
+              onClick={() => navigate("/admin/stages")}
+            >
               Gérer stages
-            </button>
-          </div>
-
-          {/* Gestion des Rapports */}
-          <div className="admin-module-card">
-            <h3>Gestion des Rapports</h3>
-            <ul>
-              <li>• Upload des rapports PDF</li>
-              <li>• Consultation des rapports</li>
-              <li>• Évaluation par enseignants</li>
-              <li>• Validation/Rejet</li>
-            </ul>
-            <button className="admin-module-button">
-              Gérer rapports
-            </button>
-          </div>
-
-          {/* Gestion des Soutenances */}
-          <div className="admin-module-card">
-            <h3>Gestion des Soutenances</h3>
-            <ul>
-              <li>• Organisation des jurys</li>
-              <li>• Planification des dates</li>
-              <li>• Affectation des membres</li>
-              <li>• Suivi des résultats</li>
-            </ul>
-            <button className="admin-module-button">
-              Gérer soutenances
             </button>
           </div>
 
@@ -114,36 +78,28 @@ const Admin = () => {
               <li>• Suivi des partenariats</li>
               <li>• Historique des stages</li>
             </ul>
-            <button className="admin-module-button">
+            <button 
+              className="admin-module-button"
+              onClick={() => navigate("/admin/companies")}
+            >
               Gérer entreprises
             </button>
           </div>
 
-          {/* Affectations Pédagogiques */}
+          {/* Gestion des Soutenances */}
           <div className="admin-module-card">
-            <h3>Affectations Pédagogiques</h3>
+            <h3>Gestion des Soutenances</h3>
             <ul>
-              <li>• Modules ↔ Enseignants</li>
-              <li>• Apprenants ↔ Filières</li>
-              <li>• Stages ↔ Encadrants</li>
-              <li>• Jurys ↔ Membres</li>
+              <li>• Planification des soutenances</li>
+              <li>• Affectation des jurys</li>
+              <li>• Gestion des dates et salles</li>
+              <li>• Suivi des résultats</li>
             </ul>
-            <button className="admin-module-button">
-              Gérer affectations
-            </button>
-          </div>
-
-          {/* Statistiques et Rapports */}
-          <div className="admin-module-card">
-            <h3>Statistiques & Rapports</h3>
-            <ul>
-              <li>• Taux de réussite</li>
-              <li>• Répartition par filière</li>
-              <li>• Évolution des stages</li>
-              <li>• Performance enseignants</li>
-            </ul>
-            <button className="admin-module-button">
-              Voir statistiques
+            <button 
+              className="admin-module-button"
+              onClick={() => navigate("/admin/defenses")}
+            >
+              Gérer soutenances
             </button>
           </div>
         </div>

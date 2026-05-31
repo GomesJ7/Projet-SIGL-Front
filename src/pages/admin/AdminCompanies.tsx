@@ -13,13 +13,10 @@ const AdminCompanies = () => {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [formData, setFormData] = useState({
-    nom: "",
-    secteur: "",
-    adresse: "",
-    email: "",
-    telephone: "",
-    nombreStages: 0,
-    description: ""
+    nomEntreprise: "",
+    emailEntreprise: "",
+    adresseEntreprise: "",
+    telephone: ""
   });
 
   if (user?.role !== "admin") {
@@ -73,13 +70,10 @@ const AdminCompanies = () => {
 
   const handleEdit = (companyData: any) => {
     setFormData({
-      nom: companyData.nom,
-      secteur: companyData.secteur,
-      adresse: companyData.adresse,
-      email: companyData.email,
-      telephone: companyData.telephone,
-      nombreStages: companyData.nombreStages,
-      description: companyData.description
+      nomEntreprise: companyData.nomEntreprise,
+      emailEntreprise: companyData.emailEntreprise,
+      adresseEntreprise: companyData.adresseEntreprise,
+      telephone: companyData.telephone
     });
     setEditingId(companyData.idEntreprise);
     setShowForm(true);
@@ -102,13 +96,10 @@ const AdminCompanies = () => {
 
   const resetForm = () => {
     setFormData({
-      nom: "",
-      secteur: "",
-      adresse: "",
-      email: "",
-      telephone: "",
-      nombreStages: 0,
-      description: ""
+      nomEntreprise: "",
+      emailEntreprise: "",
+      adresseEntreprise: "",
+      telephone: ""
     });
     setEditingId(null);
     setShowForm(false);
@@ -140,77 +131,38 @@ const AdminCompanies = () => {
                 <label>Nom</label>
                 <input
                   type="text"
-                  value={formData.nom}
-                  onChange={(e) => setFormData({...formData, nom: e.target.value})}
-                  required
-                />
-              </div>
+                    value={formData.nomEntreprise}
+                    onChange={(e) => setFormData({...formData, nomEntreprise: e.target.value})}
+                    required
+                  />
+                </div>
 
-              <div className="form-group">
-                <label>Secteur</label>
-                <select
-                  value={formData.secteur}
-                  onChange={(e) => setFormData({...formData, secteur: e.target.value})}
-                >
-                  <option value="">-- Sélectionner --</option>
-                  <option value="IT">Informatique</option>
-                  <option value="FINANCE">Finance</option>
-                  <option value="MARKETING">Marketing</option>
-                  <option value="INDUSTRIE">Industrie</option>
-                  <option value="CONSULTING">Consulting</option>
-                </select>
-              </div>
+                <div className="form-group full-width">
+                  <label>Adresse</label>
+                  <input
+                    type="text"
+                    value={formData.adresseEntreprise}
+                    onChange={(e) => setFormData({...formData, adresseEntreprise: e.target.value})}
+                  />
+                </div>
 
-              <div className="form-group full-width">
-                <label>Adresse</label>
-                <input
-                  type="text"
-                  value={formData.adresse}
-                  onChange={(e) => setFormData({...formData, adresse: e.target.value})}
-                />
-              </div>
+                <div className="form-group">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    value={formData.emailEntreprise}
+                    onChange={(e) => setFormData({...formData, emailEntreprise: e.target.value})}
+                  />
+                </div>
 
-              <div className="form-group">
-                <label>Email</label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Téléphone</label>
-                <input
-                  type="tel"
-                  value={formData.telephone}
-                  onChange={(e) => setFormData({...formData, telephone: e.target.value})}
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Nombre de stages</label>
-                <input
-                  type="number"
-                  value={formData.nombreStages}
-                  onChange={(e) => setFormData({...formData, nombreStages: parseInt(e.target.value)})}
-                  min="0"
-                />
-              </div>
-
-              <div className="form-group full-width">
-                <label>Description</label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  rows={3}
-                />
-              </div>
-            </div>
-
-            <button type="submit" className="admin-submit-button" disabled={loading}>
-              {loading ? "Traitement..." : editingId ? "✏️ Modifier" : "➕ Créer"}
-            </button>
+                <div className="form-group">
+                  <label>Téléphone</label>
+                  <input
+                    type="tel"
+                    value={formData.telephone}
+                    onChange={(e) => setFormData({...formData, telephone: e.target.value})}/>
+                </div>
+                </div>
           </form>
         </div>
       )}
@@ -226,19 +178,19 @@ const AdminCompanies = () => {
               <thead>
                 <tr>
                   <th>Nom</th>
-                  <th>Secteur</th>
                   <th>Email</th>
-                  <th>Stages</th>
+                  <th>Adresse</th>
+                  <th>Téléphone</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {companies.map((c) => (
                   <tr key={c.idEntreprise}>
-                    <td>{c.nom}</td>
-                    <td>{c.secteur}</td>
-                    <td>{c.email}</td>
-                    <td>{c.nombreStages}</td>
+                    <td>{c.nomEntreprise}</td>
+                    <td>{c.emailEntreprise}</td>
+                    <td>{c.adresseEntreprise}</td>
+                    <td>{c.telephone}</td>
                     <td className="actions">
                       <button onClick={() => handleEdit(c)} className="btn-edit">✏️</button>
                       <button onClick={() => handleDelete(c.idEntreprise)} className="btn-delete">🗑️</button>
