@@ -21,16 +21,10 @@ const Login = () => {
     e.preventDefault();
     const success = await login(email, motDePasse);
     if (success) {
-      // Redirection automatique à l'accueil après connexion réussie
-      setTimeout(() => {
-        navigate("/", { replace: true });
-      }, 300);
+      // navigate sera déclenché automatiquement par le useEffect ci-dessus
+      // dès que `user` sera mis à jour dans le contexte
+      navigate("/", { replace: true });
     }
-  };
-
-  const handleRedirection = (role: string) => {
-    // Redirection toujours vers l'accueil
-    navigate("/");
   };
 
   const handleHomeClick = () => {
@@ -51,9 +45,9 @@ const Login = () => {
 
         <div className="login-form">
           <div className="login-logo-section">
-            <img 
-              src={logoESEO} 
-              alt="Logo ES SCHOOL" 
+            <img
+              src={logoESEO}
+              alt="Logo ES SCHOOL"
               className="login-logo"
             />
             <h2 className="login-title">Connexion</h2>
@@ -86,12 +80,6 @@ const Login = () => {
             </button>
           </form>
           {error && <p className="login-error">❌ {error}</p>}
-          
-          {/* <div className="login-test-accounts">
-            <p><strong>Pour tester:</strong></p>
-            <p>Créez un compte ou utilisez les identifiants de test créés dans la base de données.</p>
-            <p className="login-note">💡 Le serveur doit être accessible sur <code>http://localhost:8080</code></p>
-          </div> */}
         </div>
       </div>
     </div>

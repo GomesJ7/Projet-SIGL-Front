@@ -1,283 +1,157 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { 
-  getDefensesAPI, createDefenseAPI, updateDefenseAPI, deleteDefenseAPI,
-  getStagesAPI, getJuriesAPI, createJuryAPI, updateJuryAPI, deleteJuryAPI,
-  getJuryEnseignantsAPI, createJuryEnseignantAPI, deleteJuryEnseignantAPI,
-  getEnseignantsAPI
-} from "../../api/adminAPI";
+import { getDefensesAPI, createDefenseAPI, updateDefenseAPI, deleteDefenseAPI, getStagesAPI } from "../../api/adminAPI";
 import "../../css/Admin.css";
+
+// SoutenanceDto backend : { idSoutenance, dateSoutenance (LocalDateTime), noteFinale, idStage }
+const EMPTY = { dateSoutenance: "", noteFinale: "", idStage: 0 };
 
 const AdminDefenses = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [defenses, setDefenses] = useState<any[]>([]);
-  const [stages, setStages] = useState<any[]>([]);
-  const [juries, setJuries] = useState<any[]>([]);
-  const [enseignants, setEnseignants] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [showDefenseForm, setShowDefenseForm] = useState(false);
-  const [showJuryForm, setShowJuryForm] = useState(false);
-  const [editingDefenseId, setEditingDefenseId] = useState<number | null>(null);
-  const [editingJuryId, setEditingJuryId] = useState<number | null>(null);
-  
-  const [defenseFormData, setDefenseFormData] = useState({
-    dateSoutenance: "",
-    salle: "",
-    idStage: 0,
-    idJury: 0
-  });
+  const [defenses, setDefenses]   = useState<any[]>([]);
+  const [stages, setStages]       = useState<any[]>([]);
+  const [loading, setLoading]     = useState(false);
+  const [error, setError]         = useState<string | null>(null);
+  const [success, setSuccess]     = useState<string | null>(null);
+  const [showForm, setShowForm]   = useState(false);
+  const [editing, setEditing]     = useState<any | null>(null);
+  const [form, setForm]           = useState(EMPTY);
 
-  const [juryFormData, setJuryFormData] = useState({
-    president: "",
-    description: ""
-  });
+  const notify = (msg: string, ok = true) => {
+    if (ok) { setSuccess(msg); setError(null); } else { setError(msg); setSuccess(null); }
+    setTimeout(() => { setSuccess(null); setError(null); }, 4000);
+  };
 
-  if (user?.role !== "admin") {
-    return (
-      <div className="admin-error">
-        <h2>❌ Accès refusé</h2>
-        <button onClick={() => navigate("/")} className="admin-back-button">
-          ← Retour à l'accueil
-        </button>
-      </div>
-    );
-  }
-
-  useEffect(() => {
-    loadData();
+  const load = useCallback(async () => {
+    setLoading(true); setError(null);
+    try {
+      const [dR, sR] = await Promise.all([getDefensesAPI(), getStagesAPI()]);
+      setDefenses(dR.data); setStages(sR.data);
+    } catch (e: any) { setError(e.response?.data?.message || "Erreur de chargement"); }
+    finally { setLoading(false); }
   }, []);
 
-  const loadData = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const [defensesRes, stagesRes, juriesRes, enseignantsRes] = await Promise.all([
-        getDefensesAPI(),
-        getStagesAPI(),
-        getJuriesAPI(),
-        getEnseignantsAPI()
-      ]);
-      setDefenses(defensesRes.data);
-      setStages(stagesRes.data);
-      setJuries(juriesRes.data);
-      setEnseignants(enseignantsRes.data);
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Erreur lors du chargement");
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => { load(); }, [load]);
 
-  const handleDefenseSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); setLoading(true);
+    // dateSoutenance doit être au format ISO LocalDateTime : "2025-06-15T10:00:00"
+    const payload = {
+      dateSoutenance: form.dateSoutenance ? form.dateSoutenance + ":00" : null,
+      noteFinale: form.noteFinale !== "" ? parseFloat(form.noteFinale) : null,
+      idStage: form.idStage || null,
+    };
     try {
-      if (editingDefenseId) {
-        await updateDefenseAPI(editingDefenseId, defenseFormData);
-        alert("✅ Soutenance modifiée");
+      if (editing) {
+        await updateDefenseAPI(editing.idSoutenance, payload);
+        notify("✅ Soutenance modifiée");
       } else {
-        await createDefenseAPI(defenseFormData);
-        alert("✅ Soutenance créée");
+        await createDefenseAPI(payload);
+        notify("✅ Soutenance planifiée avec succès");
       }
-      resetDefenseForm();
-      loadData();
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Erreur");
-    } finally {
-      setLoading(false);
-    }
+      reset(); load();
+    } catch (e: any) { notify("❌ " + (e.response?.data?.message || "Erreur"), false); }
+    finally { setLoading(false); }
   };
 
-  const handleJurySubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleEdit = (d: any) => {
+    setEditing(d);
+    setForm({
+      dateSoutenance: d.dateSoutenance ? d.dateSoutenance.slice(0, 16) : "",
+      noteFinale: d.noteFinale != null ? String(d.noteFinale) : "",
+      idStage: d.idStage || 0,
+    });
+    setShowForm(true); window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleDelete = async (d: any) => {
+    if (!window.confirm(`Supprimer la soutenance du ${d.dateSoutenance?.slice(0, 10)} ?`)) return;
     setLoading(true);
-    setError(null);
-    try {
-      if (editingJuryId) {
-        await updateJuryAPI(editingJuryId, juryFormData);
-        alert("✅ Jury modifié");
-      } else {
-        await createJuryAPI(juryFormData);
-        alert("✅ Jury créé");
-      }
-      resetJuryForm();
-      loadData();
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Erreur");
-    } finally {
-      setLoading(false);
-    }
+    try { await deleteDefenseAPI(d.idSoutenance); notify("✅ Soutenance supprimée"); load(); }
+    catch (e: any) { notify("❌ " + (e.response?.data?.message || "Erreur"), false); }
+    finally { setLoading(false); }
   };
 
-  const handleDeleteDefense = async (id: number) => {
-    if (window.confirm("Êtes-vous sûr ?")) {
-      setLoading(true);
-      try {
-        await deleteDefenseAPI(id);
-        alert("✅ Soutenance supprimée");
-        loadData();
-      } catch (err: any) {
-        setError(err.response?.data?.message || "Erreur");
-      } finally {
-        setLoading(false);
-      }
-    }
+  const reset = () => { setForm(EMPTY); setEditing(null); setShowForm(false); };
+
+  const stageLabel = (idStage: number) => {
+    const s = stages.find(st => st.idStage === idStage);
+    return s ? `#${s.idStage} — ${s.poste}` : `Stage #${idStage}`;
   };
 
-  const handleDeleteJury = async (id: number) => {
-    if (window.confirm("Êtes-vous sûr ?")) {
-      setLoading(true);
-      try {
-        await deleteJuryAPI(id);
-        alert("✅ Jury supprimé");
-        loadData();
-      } catch (err: any) {
-        setError(err.response?.data?.message || "Erreur");
-      } finally {
-        setLoading(false);
-      }
-    }
-  };
-
-  const resetDefenseForm = () => {
-    setDefenseFormData({
-      dateSoutenance: "",
-      salle: "",
-      idStage: 0,
-      idJury: 0
-    });
-    setEditingDefenseId(null);
-    setShowDefenseForm(false);
-  };
-
-  const resetJuryForm = () => {
-    setJuryFormData({
-      president: "",
-      description: ""
-    });
-    setEditingJuryId(null);
-    setShowJuryForm(false);
-  };
+  if (user?.role !== "admin") return (
+    <div className="admin-error">
+      <h2>❌ Accès refusé</h2>
+      <button onClick={() => navigate("/")} className="admin-back-button">← Retour</button>
+    </div>
+  );
 
   return (
     <div className="admin-page-container">
-      <button onClick={() => navigate("/")} className="admin-back-button">
-        ← Retour à l'accueil
-      </button>
+      <button onClick={() => navigate("/")} className="admin-back-button">← Retour à l'accueil</button>
 
       <div className="admin-page-header">
         <h1>🎓 Gestion des Soutenances</h1>
+        <button onClick={() => { if (showForm && !editing) reset(); else { setEditing(null); setForm(EMPTY); setShowForm(true); } }} className="admin-action-btn">
+          {showForm && !editing ? "❌ Fermer" : "➕ Planifier une soutenance"}
+        </button>
       </div>
 
-      {error && <div className="admin-error-message">{error}</div>}
+      {error   && <div className="admin-error-message">{error}</div>}
+      {success && <div className="admin-error-message" style={{ background: "#d4edda", color: "#155724", borderColor: "#c3e6cb" }}>{success}</div>}
 
-      {/* Section Soutenances */}
-      <div className="admin-section">
-        <div className="section-header">
-          <h2>📋 Soutenances</h2>
-          <button 
-            onClick={() => setShowDefenseForm(!showDefenseForm)}
-            className="admin-action-btn"
-          >
-            {showDefenseForm ? "❌ Fermer" : "➕ Ajouter une soutenance"}
-          </button>
-        </div>
-
-        {showDefenseForm && (
-          <div className="admin-form-container">
-            <form onSubmit={handleDefenseSubmit} className="admin-form">
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>Date de soutenance</label>
-                  <input
-                    type="datetime-local"
-                    value={defenseFormData.dateSoutenance}
-                    onChange={(e) => setDefenseFormData({...defenseFormData, dateSoutenance: e.target.value})}
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Salle</label>
-                  <input
-                    type="text"
-                    value={defenseFormData.salle}
-                    onChange={(e) => setDefenseFormData({...defenseFormData, salle: e.target.value})}
-                    placeholder="Ex: Salle 101"
-                    required
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Stage</label>
-                  <select
-                    value={defenseFormData.idStage}
-                    onChange={(e) => setDefenseFormData({...defenseFormData, idStage: parseInt(e.target.value)})}
-                    required
-                  >
-                    <option value="0">-- Sélectionner --</option>
-                    {stages.map((s) => (
-                      <option key={s.idStage} value={s.idStage}>
-                        {s.poste} - {s.apprenant?.prenom}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label>Jury</label>
-                  <select
-                    value={defenseFormData.idJury}
-                    onChange={(e) => setDefenseFormData({...defenseFormData, idJury: parseInt(e.target.value)})}
-                    required
-                  >
-                    <option value="0">-- Sélectionner --</option>
-                    {juries.map((j) => (
-                      <option key={j.idJury} value={j.idJury}>
-                        {j.president} - {j.description}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+      {showForm && (
+        <div className="admin-form-container">
+          <h2 style={{ marginTop: 0, marginBottom: 20, color: "#333" }}>{editing ? "✏️ Modifier la soutenance" : "➕ Planifier une soutenance"}</h2>
+          <form onSubmit={handleSubmit} className="admin-form">
+            <div className="form-grid">
+              <div className="form-group">
+                <label>Stage *</label>
+                <select value={form.idStage} onChange={e => setForm({ ...form, idStage: parseInt(e.target.value) })} required>
+                  <option value="0">-- Sélectionner un stage --</option>
+                  {stages.map(s => <option key={s.idStage} value={s.idStage}>{stageLabel(s.idStage)}</option>)}
+                </select>
               </div>
+              <div className="form-group">
+                <label>Date et heure *</label>
+                <input type="datetime-local" value={form.dateSoutenance} onChange={e => setForm({ ...form, dateSoutenance: e.target.value })} required />
+              </div>
+              <div className="form-group">
+                <label>Note finale (0–20)</label>
+                <input type="number" value={form.noteFinale} onChange={e => setForm({ ...form, noteFinale: e.target.value })} min="0" max="20" step="0.5" placeholder="Ex : 15.5" />
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: 12 }}>
+              <button type="submit" className="admin-submit-button" disabled={loading}>{loading ? "⏳..." : editing ? "✏️ Enregistrer" : "➕ Planifier"}</button>
+              <button type="button" onClick={reset} style={{ padding: "12px 24px", border: "2px solid #e0e0e0", borderRadius: 8, background: "white", cursor: "pointer", fontWeight: 600 }}>Annuler</button>
+            </div>
+          </form>
+        </div>
+      )}
 
-              <button type="submit" className="admin-submit-button" disabled={loading}>
-                {loading ? "Traitement..." : editingDefenseId ? "✏️ Modifier" : "➕ Créer"}
-              </button>
-            </form>
-          </div>
-        )}
-
-        <div className="admin-list-container">
-          {loading && !showDefenseForm ? (
-            <p className="loading">⏳ Chargement...</p>
-          ) : defenses.length === 0 ? (
-            <p className="empty">Aucune soutenance trouvée</p>
-          ) : (
+      <div className="admin-list-container">
+        {loading && defenses.length === 0 ? <p className="loading">⏳ Chargement...</p>
+          : defenses.length === 0 ? <p className="empty">Aucune soutenance planifiée</p>
+          : (
             <div className="admin-table">
               <table>
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Salle</th>
-                    <th>Apprenant</th>
-                    <th>Jury</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
+                <thead><tr><th>ID</th><th>Stage</th><th>Date & Heure</th><th>Note finale</th><th style={{ textAlign: "center" }}>Actions</th></tr></thead>
                 <tbody>
-                  {defenses.map((d) => (
+                  {defenses.map(d => (
                     <tr key={d.idSoutenance}>
-                      <td>{d.dateSoutenance?.split('T')[0]}</td>
-                      <td>{d.salle}</td>
-                      <td>{d.stage?.apprenant?.prenom}</td>
-                      <td>{d.jury?.president}</td>
+                      <td>#{d.idSoutenance}</td>
+                      <td>{stageLabel(d.idStage)}</td>
+                      <td>{d.dateSoutenance ? new Date(d.dateSoutenance).toLocaleString("fr-FR") : "—"}</td>
+                      <td>
+                        {d.noteFinale != null
+                          ? <span style={{ fontWeight: 700, color: d.noteFinale >= 10 ? "#10b981" : "#ef4444" }}>{d.noteFinale}/20</span>
+                          : <span style={{ color: "#aaa" }}>Non notée</span>}
+                      </td>
                       <td className="actions">
-                        <button onClick={() => handleDeleteDefense(d.idSoutenance)} className="btn-delete">🗑️</button>
+                        <button onClick={() => handleEdit(d)} className="btn-edit" title="Modifier" disabled={loading}>✏️</button>
+                        <button onClick={() => handleDelete(d)} className="btn-delete" title="Supprimer" disabled={loading}>🗑️</button>
                       </td>
                     </tr>
                   ))}
@@ -285,88 +159,6 @@ const AdminDefenses = () => {
               </table>
             </div>
           )}
-        </div>
-      </div>
-
-      {/* Section Jurys */}
-      <div className="admin-section">
-        <div className="section-header">
-          <h2>👨‍⚖️ Jurys</h2>
-          <button 
-            onClick={() => setShowJuryForm(!showJuryForm)}
-            className="admin-action-btn"
-          >
-            {showJuryForm ? "❌ Fermer" : "➕ Ajouter un jury"}
-          </button>
-        </div>
-
-        {showJuryForm && (
-          <div className="admin-form-container">
-            <form onSubmit={handleJurySubmit} className="admin-form">
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>Président</label>
-                  <select
-                    value={juryFormData.president}
-                    onChange={(e) => setJuryFormData({...juryFormData, president: e.target.value})}
-                    required
-                  >
-                    <option value="">-- Sélectionner --</option>
-                    {enseignants.map((e) => (
-                      <option key={e.idUtilisateur} value={e.idUtilisateur}>
-                        {e.prenom} {e.nom}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="form-group full-width">
-                  <label>Description</label>
-                  <textarea
-                    value={juryFormData.description}
-                    onChange={(e) => setJuryFormData({...juryFormData, description: e.target.value})}
-                    rows={2}
-                  />
-                </div>
-              </div>
-
-              <button type="submit" className="admin-submit-button" disabled={loading}>
-                {loading ? "Traitement..." : editingJuryId ? "✏️ Modifier" : "➕ Créer"}
-              </button>
-            </form>
-          </div>
-        )}
-
-        <div className="admin-list-container">
-          {loading && !showJuryForm ? (
-            <p className="loading">⏳ Chargement...</p>
-          ) : juries.length === 0 ? (
-            <p className="empty">Aucun jury trouvé</p>
-          ) : (
-            <div className="admin-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Président</th>
-                    <th>Description</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {juries.map((j) => (
-                    <tr key={j.idJury}>
-                      <td>{j.president}</td>
-                      <td>{j.description}</td>
-                      <td className="actions">
-                        <button onClick={() => handleDeleteJury(j.idJury)} className="btn-delete">🗑️</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );
