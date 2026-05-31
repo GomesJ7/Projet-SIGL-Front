@@ -5,44 +5,47 @@ import Administrateur from "./pages/administrateur/Administrateur";
 import Enseignant from "./pages/enseignant/Enseignant";
 import Apprenant from "./pages/apprenant/Apprenant";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
     return (
-        <BrowserRouter>
-            <Routes>
-                {/* Page d'accueil */}
-                <Route path="/" element={<Home />} />
+        <AuthProvider>
+            <BrowserRouter>
+                <Routes>
+                    {/* Page d'accueil */}
+                    <Route path="/" element={<Home />} />
 
-                <Route path="/login" element={<Login />} />
+                    <Route path="/login" element={<Login />} />
 
-                <Route
-                    path="/administrateur"
-                    element={
-                        <ProtectedRoute>
-                            <Administrateur />
-                        </ProtectedRoute>
-                    }
-                />
+                    <Route
+                        path="/administrateur"
+                        element={
+                            <ProtectedRoute>
+                                <Administrateur />
+                            </ProtectedRoute>
+                        }
+                    />
 
-                <Route
-                    path="/enseignant"
-                    element={
-                        <ProtectedRoute>
-                            <Enseignant />
-                        </ProtectedRoute>
-                    }
-                />
+                    <Route
+                        path="/enseignant"
+                        element={
+                            <ProtectedRoute>
+                                <Enseignant />
+                            </ProtectedRoute>
+                        }
+                    />
 
-                <Route
-                    path="/apprenant"
-                    element={
-                        <ProtectedRoute>
-                            <Apprenant />
-                        </ProtectedRoute>
-                    }
-                />
-            </Routes>
-        </BrowserRouter>
+                    <Route
+                        path="/apprenant"
+                        element={
+                            <ProtectedRoute>
+                                <Apprenant />
+                            </ProtectedRoute>
+                        }
+                    />
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
     );
 }
 

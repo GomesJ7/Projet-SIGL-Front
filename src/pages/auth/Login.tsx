@@ -5,27 +5,51 @@ import logoESEO from "../../images/ESEO.jpeg";
 import "../../css/Login.css";
 
 const Login = () => {
-  const [loginStr, setLoginStr] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { login, user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setError("");
-    const success = login(loginStr, password);
-    if (success) {
-      // Redirection selon le rôle
-      if (user?.role === "admin") {
+
+    if (!email.trim() || !password.trim()) {
+      setError("Veuillez renseigner votre email et votre mot de passe.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await login(email.trim(), password);
+      // Récupérer le user depuis le localStorage car le state est mis à jour de manière async
+      const raw = localStorage.getItem("user");
+      const user = raw ? JSON.parse(raw) : null;
+
+      // Redirection selon le rôle retourné par le back-end
+      if (user?.role === "ADMIN") {
         navigate("/administrateur");
-      } else if (user?.role === "teacher") {
+      } else if (user?.role === "ENSEIGNANT") {
         navigate("/enseignant");
-      } else if (user?.role === "student") {
+      } else if (user?.role === "APPRENANT") {
         navigate("/apprenant");
       }
-    } else {
-      setError("Identifiants invalides. Utilisez admin/password, teacher/password ou student/password");
+    } catch (err: any) {
+      if (err?.response?.status === 401 || err?.response?.status === 403) {
+        setError("Email ou mot de passe incorrect.");
+      } else if (err?.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Une erreur est survenue. Vérifiez que le serveur est démarré.");
+      }
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") handleLogin();
   };
 
   const handleHomeClick = () => {
@@ -46,42 +70,43 @@ const Login = () => {
 
         <div className="login-form">
           <div className="login-logo-section">
-            <img 
-              src={logoESEO} 
-              alt="Logo HIGH SCHOOL" 
+            <img
+              src={logoESEO}
+              alt="Logo ESEO"
               className="login-logo"
             />
             <h2 className="login-title">Connexion</h2>
           </div>
           <div className="login-form-section">
             <input
-              placeholder="Login"
-              value={loginStr}
-              onChange={(e) => setLoginStr(e.target.value)}
+              type="email"
+              placeholder="Adresse email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={handleKeyDown}
               className="login-input"
+              autoComplete="email"
+              disabled={loading}
             />
             <input
               type="password"
-              placeholder="Password"
+              placeholder="Mot de passe"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={handleKeyDown}
               className="login-input"
+              autoComplete="current-password"
+              disabled={loading}
             />
             <button
               onClick={handleLogin}
               className="login-button"
+              disabled={loading}
             >
-              Login
+              {loading ? "Connexion..." : "Se connecter"}
             </button>
           </div>
           {error && <p className="login-error">{error}</p>}
-          
-          <div className="login-test-accounts">
-            <p><strong>Comptes de test:</strong></p>
-            <p>Administrateur: <code>admin / password</code></p>
-            <p>Enseignant: <code>teacher / password</code></p>
-            <p>Apprenant: <code>student / password</code></p>
-          </div>
         </div>
       </div>
     </div>

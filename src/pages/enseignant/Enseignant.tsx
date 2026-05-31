@@ -5,6 +5,7 @@ import "../../css/Enseignant.css";
 const Teacher = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const displayName = [user?.prenom, user?.nom].filter(Boolean).join(" ");
 
   const handleLogout = () => {
     logout();
@@ -29,8 +30,7 @@ const Teacher = () => {
         </div>
 
         <div className="enseignant-user-info">
-          <p><strong>Utilisateur connecté:</strong> {user?.name}</p>
-          <p><strong>Login:</strong> {user?.login}</p>
+          <p><strong>Utilisateur connecté:</strong> {displayName || user?.email}</p>
           <p><strong>Rôle:</strong> {user?.role}</p>
         </div>
 

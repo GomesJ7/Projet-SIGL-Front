@@ -5,6 +5,7 @@ import "../../css/Administrateur.css";
 const Admin = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const displayName = [user?.prenom, user?.nom].filter(Boolean).join(" ");
 
   const handleLogout = () => {
     logout();
@@ -29,8 +30,7 @@ const Admin = () => {
         </div>
 
         <div className="admin-user-info">
-          <p><strong>Utilisateur connecté:</strong> {user?.name}</p>
-          <p><strong>Login:</strong> {user?.login}</p>
+          <p><strong>Utilisateur connecté:</strong> {displayName || user?.email}</p>
           <p><strong>Rôle:</strong> {user?.role}</p>
         </div>
 
@@ -39,7 +39,7 @@ const Admin = () => {
           <div className="admin-module-card">
             <h3>Gestion des Apprenants</h3>
             <ul>
-              <li>• CRUD des apprenants</li>
+              <li>• Créer/supprimer des apprenants</li>
               <li>• Affectation filière/promotion</li>
               <li>• Suivi académique</li>
               <li>• Historique des stages</li>
@@ -53,7 +53,7 @@ const Admin = () => {
           <div className="admin-module-card">
             <h3>Gestion des Enseignants</h3>
             <ul>
-              <li>• Créer/modifier des enseignants</li>
+              <li>• Créer/supprimer des enseignants</li>
               <li>• Affectation aux modules</li>
               <li>• Encadrement des stages</li>
               <li>• Participation aux jurys</li>
@@ -77,17 +77,15 @@ const Admin = () => {
             </button>
           </div>
 
-          {/* Gestion des Rapports */}
+          {/* Gestion des modules et filières */}
           <div className="admin-module-card">
-            <h3>Gestion des Rapports</h3>
+            <h3>Gestion des modules et filières</h3>
             <ul>
-              <li>• Upload des rapports PDF</li>
-              <li>• Consultation des rapports</li>
-              <li>• Évaluation par enseignants</li>
-              <li>• Validation/Rejet</li>
+              <li>• Créer/supprimer un module</li>
+              <li>• Créer/supprimer une filière</li>
             </ul>
             <button className="admin-module-button">
-              Gérer rapports
+              Gérer
             </button>
           </div>
 

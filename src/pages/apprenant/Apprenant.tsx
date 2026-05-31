@@ -5,6 +5,7 @@ import "../../css/Apprenant.css";
 const StudentSpace = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const displayName = [user?.prenom, user?.nom].filter(Boolean).join(" ");
 
   const handleLogout = () => {
     logout();
@@ -29,8 +30,7 @@ const StudentSpace = () => {
         </div>
 
         <div className="apprenant-user-info">
-          <p><strong>Utilisateur connecté:</strong> {user?.name}</p>
-          <p><strong>Login:</strong> {user?.login}</p>
+          <p><strong>Utilisateur connecté:</strong> {displayName || user?.email}</p>
           <p><strong>Rôle:</strong> {user?.role}</p>
         </div>
 
@@ -76,7 +76,7 @@ const StudentSpace = () => {
           </div>
 
           <div className="apprenant-module-card">
-            <h3>Contact Enseignants</h3>
+            <h3>Mes Contacts</h3>
             <p>Contacter mes enseignants référents</p>
             <button className="apprenant-module-button">
               Mes contacts
