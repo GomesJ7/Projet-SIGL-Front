@@ -40,6 +40,10 @@ const Admin = () => {
     navigate("/administrateur/entreprises");
   };
 
+  const handleManageStats = () => {
+    navigate("/administrateur/statistiques");
+  };
+
   return (
     <div className="admin-container">
       <button onClick={handleHomeClick} className="admin-home-button" title="Retour à l'accueil">
@@ -151,7 +155,7 @@ const Admin = () => {
               <li>• Évolution des stages</li>
               <li>• Performance enseignants</li>
             </ul>
-            <button className="admin-module-button">
+            <button className="admin-module-button" onClick={handleManageStats}>
               Voir statistiques
             </button>
           </div>

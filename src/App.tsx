@@ -12,6 +12,7 @@ import EnseignantManagement from "./pages/administrateur/EnseignantManagement";
 import StageManagement from "./pages/administrateur/StageManagement";
 import SoutenanceManagement from "./pages/administrateur/SoutenanceManagement";
 import EntrepriseManagement from "./pages/administrateur/EntrepriseManagement";
+import StatsReports from "./pages/administrateur/StatsReports";
 
 function App() {
     return (
@@ -82,6 +83,15 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <EntrepriseManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/administrateur/statistiques"
+                        element={
+                            <ProtectedRoute>
+                                <StatsReports />
                             </ProtectedRoute>
                         }
                     />
