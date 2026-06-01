@@ -10,6 +10,8 @@ import ModulesFilieresManagement from "./pages/administrateur/ModulesFilieresMan
 import ApprenantManagement from "./pages/administrateur/ApprenantManagement";
 import EnseignantManagement from "./pages/administrateur/EnseignantManagement";
 import StageManagement from "./pages/administrateur/StageManagement";
+import SoutenanceManagement from "./pages/administrateur/SoutenanceManagement";
+import EntrepriseManagement from "./pages/administrateur/EntrepriseManagement";
 
 function App() {
     return (
@@ -62,6 +64,24 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <StageManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/administrateur/soutenances"
+                        element={
+                            <ProtectedRoute>
+                                <SoutenanceManagement />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/administrateur/entreprises"
+                        element={
+                            <ProtectedRoute>
+                                <EntrepriseManagement />
                             </ProtectedRoute>
                         }
                     />

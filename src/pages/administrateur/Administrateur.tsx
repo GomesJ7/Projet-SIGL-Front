@@ -32,6 +32,14 @@ const Admin = () => {
     navigate("/administrateur/stages");
   };
 
+  const handleManageSoutenances = () => {
+    navigate("/administrateur/soutenances");
+  };
+
+  const handleManageEntreprises = () => {
+    navigate("/administrateur/entreprises");
+  };
+
   return (
     <div className="admin-container">
       <button onClick={handleHomeClick} className="admin-home-button" title="Retour à l'accueil">
@@ -93,31 +101,32 @@ const Admin = () => {
             </button>
           </div>
 
-          {/* Gestion des modules et filières */}
+          {/* Modules, filières et entreprises */}
           <div className="admin-module-card">
-            <h3>Gestion des modules et filières</h3>
+            <h3>Modules, filières et entreprises</h3>
             <ul>
               <li>• Créer/supprimer un module</li>
               <li>• Créer/supprimer une filière</li>
+              <li>• Créer/supprimer une entreprise</li>
             </ul>
             <button className="admin-module-button" onClick={handleManageModulesFilieres}>
               Gérer
             </button>
           </div>
 
-          {/* Gestion des Soutenances */}
-          <div className="admin-module-card">
-            <h3>Gestion des Soutenances</h3>
-            <ul>
-              <li>• Organisation des jurys</li>
-              <li>• Planification des dates</li>
-              <li>• Affectation des membres</li>
-              <li>• Suivi des résultats</li>
-            </ul>
-            <button className="admin-module-button">
-              Gérer soutenances
-            </button>
-          </div>
+           {/* Gestion des Soutenances */}
+           <div className="admin-module-card">
+             <h3>Gestion des Soutenances</h3>
+             <ul>
+               <li>• Organisation des jurys</li>
+               <li>• Planification des dates</li>
+               <li>• Affectation des membres</li>
+               <li>• Suivi des résultats</li>
+             </ul>
+             <button className="admin-module-button" onClick={handleManageSoutenances}>
+               Gérer soutenances
+             </button>
+           </div>
 
           {/* Gestion des Entreprises */}
           <div className="admin-module-card">
@@ -128,22 +137,8 @@ const Admin = () => {
               <li>• Suivi des partenariats</li>
               <li>• Historique des stages</li>
             </ul>
-            <button className="admin-module-button">
+            <button className="admin-module-button" onClick={handleManageEntreprises}>
               Gérer entreprises
-            </button>
-          </div>
-
-          {/* Affectations Pédagogiques */}
-          <div className="admin-module-card">
-            <h3>Affectations Pédagogiques</h3>
-            <ul>
-              <li>• Modules ↔ Enseignants</li>
-              <li>• Apprenants ↔ Filières</li>
-              <li>• Stages ↔ Encadrants</li>
-              <li>• Jurys ↔ Membres</li>
-            </ul>
-            <button className="admin-module-button">
-              Gérer affectations
             </button>
           </div>
 
