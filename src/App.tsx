@@ -10,91 +10,45 @@ import AdminUsers from "./pages/admin/AdminUsers";
 import AdminStages from "./pages/admin/AdminStages";
 import AdminCompanies from "./pages/admin/AdminCompanies";
 import AdminDefenses from "./pages/admin/AdminDefenses";
+import AdminFilieres from "./pages/admin/AdminFilieres";
+import AdminPromotions from "./pages/admin/AdminPromotions";
+import AdminModules from "./pages/admin/AdminModules";
+import AdminSalles from "./pages/admin/AdminSalles";
+import AdminJuries from "./pages/admin/AdminJuries";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-    const { initAuth } = useAuth();
+  const { initAuth } = useAuth();
 
-    // Initialiser l'authentification au démarrage
-    useEffect(() => {
-        initAuth();
-    }, [initAuth]);
+  // Initialiser l'authentification au démarrage
+  useEffect(() => {
+    initAuth();
+  }, [initAuth]);
 
-    return (
-        <BrowserRouter>
-            <Routes>
-                {/* Page d'accueil */}
-                <Route path="/" element={<Home />} />
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
 
-                <Route path="/login" element={<Login />} />
+        {/* Pages Admin CRUD */}
+        <Route path="/admin/users"      element={<ProtectedRoute><AdminUsers /></ProtectedRoute>} />
+        <Route path="/admin/stages"     element={<ProtectedRoute><AdminStages /></ProtectedRoute>} />
+        <Route path="/admin/companies"  element={<ProtectedRoute><AdminCompanies /></ProtectedRoute>} />
+        <Route path="/admin/defenses"   element={<ProtectedRoute><AdminDefenses /></ProtectedRoute>} />
+        <Route path="/admin/filieres"   element={<ProtectedRoute><AdminFilieres /></ProtectedRoute>} />
+        <Route path="/admin/promotions" element={<ProtectedRoute><AdminPromotions /></ProtectedRoute>} />
+        <Route path="/admin/modules"    element={<ProtectedRoute><AdminModules /></ProtectedRoute>} />
+        <Route path="/admin/salles"     element={<ProtectedRoute><AdminSalles /></ProtectedRoute>} />
+        <Route path="/admin/juries"     element={<ProtectedRoute><AdminJuries /></ProtectedRoute>} />
 
-                {/* Pages Admin CRUD */}
-                <Route
-                    path="/admin/users"
-                    element={
-                        <ProtectedRoute>
-                            <AdminUsers />
-                        </ProtectedRoute>
-                    }
-                />
-
-                <Route
-                    path="/admin/stages"
-                    element={
-                        <ProtectedRoute>
-                            <AdminStages />
-                        </ProtectedRoute>
-                    }
-                />
-
-                <Route
-                    path="/admin/companies"
-                    element={
-                        <ProtectedRoute>
-                            <AdminCompanies />
-                        </ProtectedRoute>
-                    }
-                />
-
-                <Route
-                    path="/admin/defenses"
-                    element={
-                        <ProtectedRoute>
-                            <AdminDefenses />
-                        </ProtectedRoute>
-                    }
-                />
-
-                {/* Pages Protégées par rôle */}
-                <Route
-                    path="/administrateur"
-                    element={
-                        <ProtectedRoute>
-                            <Administrateur />
-                        </ProtectedRoute>
-                    }
-                />
-
-                <Route
-                    path="/enseignant"
-                    element={
-                        <ProtectedRoute>
-                            <Enseignant />
-                        </ProtectedRoute>
-                    }
-                />
-
-                <Route
-                    path="/apprenant"
-                    element={
-                        <ProtectedRoute>
-                            <Apprenant />
-                        </ProtectedRoute>
-                    }
-                />
-            </Routes>
-        </BrowserRouter>
-    );
+        {/* Pages par rôle */}
+        <Route path="/administrateur" element={<ProtectedRoute><Administrateur /></ProtectedRoute>} />
+        <Route path="/enseignant"     element={<ProtectedRoute><Enseignant /></ProtectedRoute>} />
+        <Route path="/apprenant"      element={<ProtectedRoute><Apprenant /></ProtectedRoute>} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
