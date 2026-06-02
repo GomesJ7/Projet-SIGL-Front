@@ -17,8 +17,37 @@ const MODULES = [
 const Admin = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const displayName = [user?.prenom, user?.nom].filter(Boolean).join(" ");
 
   const handleLogout = () => { logout(); navigate("/login"); };
+
+  const handleManageModulesFilieres = () => {
+    navigate("/administrateur/modules-filieres");
+  };
+
+  const handleManageApprenants = () => {
+    navigate("/administrateur/apprenants");
+  };
+
+  const handleManageEnseignants = () => {
+    navigate("/administrateur/enseignants");
+  };
+
+  const handleManageStages = () => {
+    navigate("/administrateur/stages");
+  };
+
+  const handleManageSoutenances = () => {
+    navigate("/administrateur/soutenances");
+  };
+
+  const handleManageEntreprises = () => {
+    navigate("/administrateur/entreprises");
+  };
+
+  const handleManageStats = () => {
+    navigate("/administrateur/statistiques");
+  };
 
   return (
     <div className="admin-container">

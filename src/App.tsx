@@ -16,6 +16,22 @@ import AdminModules from "./pages/admin/AdminModules";
 import AdminSalles from "./pages/admin/AdminSalles";
 import AdminJuries from "./pages/admin/AdminJuries";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
+import ModulesFilieresManagement from "./pages/administrateur/ModulesFilieresManagement";
+import ApprenantManagement from "./pages/administrateur/ApprenantManagement";
+import EnseignantManagement from "./pages/administrateur/EnseignantManagement";
+import StageManagement from "./pages/administrateur/StageManagement";
+import SoutenanceManagement from "./pages/administrateur/SoutenanceManagement";
+import EntrepriseManagement from "./pages/administrateur/EntrepriseManagement";
+import StatsReports from "./pages/administrateur/StatsReports";
+import MyModules from "./pages/enseignant/MyModules";
+import EncadrementStages from "./pages/enseignant/EncadrementStages";
+import EvaluationRapports from "./pages/enseignant/EvaluationRapports";
+import JurySoutenance from "./pages/enseignant/JurySoutenance";
+import MonProfilAcademique from "./pages/apprenant/MonProfilAcademique";
+import MesStagesRapports from "./pages/apprenant/MesStagesRapports";
+import MesResultats from "./pages/apprenant/MesResultats";
+import MesContacts from "./pages/apprenant/MesContacts";
 
 function App() {
   const { initAuth } = useAuth();

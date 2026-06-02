@@ -1,90 +1,60 @@
 import { createContext, useContext, useState, useCallback } from "react";
 import api from "../api/axiosConfig";
 
-const AuthContext = createContext<any>(null);
+export type RoleType = "ADMIN" | "ENSEIGNANT" | "APPRENANT";
 
-export const AuthProvider = ({ children }: any) => {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isInitialized, setIsInitialized] = useState(false);
+export interface AuthUser {
+  idUtilisateur: number;
+  email: string;
+  nom: string;
+  prenom: string;
+  role: RoleType;
+}
 
-  const convertRoleToFrontend = (backendRole: string): string => {
-    const roleMap: { [key: string]: string } = {
-      ADMIN: "admin",
-      ENSEIGNANT: "teacher",
-      APPRENANT: "student",
+interface AuthContextType {
+  user: AuthUser | null;
+  login: (email: string, motDePasse: string) => Promise<void>;
+  logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextType | null>(null);
+
+const getUserFromStorage = (): AuthUser | null => {
+  try {
+    const raw = localStorage.getItem("user");
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [user, setUser] = useState<AuthUser | null>(getUserFromStorage);
+
+  const login = async (email: string, motDePasse: string): Promise<void> => {
+    // Appel réel au back-end Spring Boot
+    const response = await api.post("/auth/login", { email, motDePasse });
+    const data = response.data;
+
+    // Stockage du token JWT pour les requêtes suivantes
+    localStorage.setItem("token", data.token);
+
+    const userData: AuthUser = {
+      idUtilisateur: data.idUtilisateur,
+      email: data.email,
+      nom: data.nom,
+      prenom: data.prenom,
+      role: data.role as RoleType,
     };
-    return roleMap[backendRole] || backendRole.toLowerCase();
+
+    localStorage.setItem("user", JSON.stringify(userData));
+    setUser(userData);
   };
 
-  const logout = useCallback(() => {
+  const logout = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("tokenType");
     localStorage.removeItem("user");
     setUser(null);
-    setError(null);
-  }, []);
-
-  // Stabilisé avec useCallback pour éviter la boucle infinie dans App.tsx
-  const initAuth = useCallback(() => {
-    if (isInitialized) return;
-    try {
-      const storedUser = localStorage.getItem("user");
-      const storedToken = localStorage.getItem("token");
-      if (storedUser && storedToken) {
-        try {
-          setUser(JSON.parse(storedUser));
-        } catch {
-          logout();
-        }
-      }
-    } finally {
-      setIsInitialized(true);
-    }
-  }, [isInitialized, logout]);
-
-  const login = async (email: string, motDePasse: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await api.post("/auth/login", { email, motDePasse });
-
-      const {
-        token,
-        type,
-        email: userEmail,
-        nom,
-        prenom,
-        role,
-        idUtilisateur,
-      } = response.data;
-
-      localStorage.setItem("token", token);
-      localStorage.setItem("tokenType", type);
-
-      const userData = {
-        idUtilisateur,
-        email: userEmail,
-        nom,
-        prenom,
-        role: convertRoleToFrontend(role),
-      };
-
-      localStorage.setItem("user", JSON.stringify(userData));
-      setUser(userData);
-      return true;
-    } catch (err: any) {
-      const errorMsg =
-        err.response?.data?.message ||
-        err.response?.data?.error ||
-        "Identifiants invalides ou serveur indisponible";
-      setError(errorMsg);
-      console.error("Erreur de connexion:", err);
-      return false;
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -96,4 +66,8 @@ export const AuthProvider = ({ children }: any) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth doit être utilisé dans un AuthProvider");
+  return ctx;
+};

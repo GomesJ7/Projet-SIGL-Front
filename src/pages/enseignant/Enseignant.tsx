@@ -5,6 +5,7 @@ import "../../css/Enseignant.css";
 const Teacher = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const displayName = [user?.prenom, user?.nom].filter(Boolean).join(" ");
 
   const handleLogout = () => {
     logout();
@@ -13,6 +14,22 @@ const Teacher = () => {
 
   const handleHomeClick = () => {
     navigate("/");
+  };
+
+  const handleMyModules = () => {
+    navigate("/enseignant/mes-modules");
+  };
+
+  const handleMesStagiaires = () => {
+    navigate("/enseignant/encadrement-stages");
+  };
+
+  const handleEvaluationRapports = () => {
+    navigate("/enseignant/evaluation-rapports");
+  };
+
+  const handleJurySoutenances = () => {
+    navigate("/enseignant/jury-soutenances");
   };
 
   return (
@@ -29,8 +46,7 @@ const Teacher = () => {
         </div>
 
         <div className="enseignant-user-info">
-          <p><strong>Utilisateur connecté:</strong> {user?.name}</p>
-          <p><strong>Login:</strong> {user?.login}</p>
+          <p><strong>Utilisateur connecté:</strong> {displayName || user?.email}</p>
           <p><strong>Rôle:</strong> {user?.role}</p>
         </div>
 
@@ -38,7 +54,7 @@ const Teacher = () => {
           <div className="enseignant-module-card">
             <h3> Mes Modules</h3>
             <p>Gérer les modules qui me sont affectés</p>
-            <button className="enseignant-module-button">
+            <button className="enseignant-module-button" onClick={handleMyModules}>
               Voir mes modules
             </button>
           </div>
@@ -46,7 +62,7 @@ const Teacher = () => {
           <div className="enseignant-module-card">
             <h3> Encadrement de Stages</h3>
             <p>Suivre les apprenants que j'encadre</p>
-            <button className="enseignant-module-button">
+            <button className="enseignant-module-button" onClick={handleMesStagiaires}>
               Mes stagiaires
             </button>
           </div>
@@ -54,7 +70,7 @@ const Teacher = () => {
           <div className="enseignant-module-card">
             <h3> Évaluation des Rapports</h3>
             <p>Évaluer et commenter les rapports de stage</p>
-            <button className="enseignant-module-button">
+            <button className="enseignant-module-button" onClick={handleEvaluationRapports}>
               Rapports à évaluer
             </button>
           </div>
@@ -62,18 +78,11 @@ const Teacher = () => {
           <div className="enseignant-module-card">
             <h3>Jury de Soutenance</h3>
             <p>Participer aux jurys d'évaluation</p>
-            <button className="enseignant-module-button">
+            <button className="enseignant-module-button" onClick={handleJurySoutenances}>
               Mes jurys
             </button>
           </div>
 
-          <div className="enseignant-module-card">
-            <h3>Suivi Académique</h3>
-            <p>Consulter les statistiques et suivi des apprenants</p>
-            <button className="enseignant-module-button">
-              Voir statistiques
-            </button>
-          </div>
         </div>
       </div>
     </div>

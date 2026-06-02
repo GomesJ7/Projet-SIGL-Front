@@ -331,13 +331,18 @@
 
 /* About Section */
 .home-about {
-  background-color: #f0f0f0;
-  padding: 80px 40px;
+  background-color: #f8f9fa;
+  padding: 60px 20px;
 }
 
 .home-about-container {
   max-width: 1200px;
   margin: 0 auto;
+  background-color: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 56px 40px;
 }
 
 .home-about h2 {
@@ -477,6 +482,10 @@
 
   .home-about {
     padding: 60px 20px;
+  }
+
+  .home-about-container {
+    padding: 36px 24px;
   }
 
   .home-cta {
