@@ -1,0 +1,226 @@
+@import "./Administrateur.css";
+
+.admin-mf-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-mf-back-button {
+  padding: 10px 20px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.admin-mf-back-button:hover {
+  background-color: #545b62;
+}
+
+.admin-mf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+  align-items: start;
+}
+
+.admin-mf-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-mf-form input,
+.admin-mf-form select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  color: #212529;
+}
+
+.admin-mf-form input::placeholder {
+  color: #6c757d;
+}
+
+.admin-mf-form input:focus,
+.admin-mf-form select:focus {
+  outline: none;
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+.admin-mf-success,
+.admin-mf-error {
+  margin: 0 0 15px 0;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.admin-mf-success {
+  background-color: #e7f7ed;
+  color: #1e7e34;
+}
+
+.admin-mf-error {
+  background-color: #fdeaea;
+  color: #a72828;
+}
+
+.admin-mf-danger-button {
+  margin-top: 6px;
+  padding: 8px 16px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.admin-mf-danger-button:hover {
+  background-color: #b52a37;
+}
+
+@media (max-width: 768px) {
+  .admin-mf-actions {
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+.admin-mf-stages {
+  margin-top: 12px;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border-left: 3px solid #007bff;
+}
+
+.admin-mf-stage-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.admin-mf-stage-item:last-child {
+  border-bottom: none;
+}
+
+.admin-mf-stage-item p {
+  margin: 4px 0;
+  color: #333;
+}
+
+.admin-mf-stage-dates {
+  font-size: 0.9em;
+  color: #666;
+  font-style: italic;
+}
+
+.admin-mf-stage-state {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.admin-mf-state-en_cours {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.admin-mf-state-termine {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.admin-mf-state-valide {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.admin-mf-state-refuse {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Information text for stages section */
+.admin-mf-info {
+  margin: 0 0 15px 0;
+  color: #666;
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+/* Action dropdown selector */
+.admin-mf-action-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #0d6efd;
+  border-radius: 6px;
+  box-sizing: border-box;
+  background-color: #f0f6ff;
+  color: #0d4fa0;
+  font-weight: 600;
+  font-size: 0.97rem;
+  cursor: pointer;
+  margin-bottom: 4px;
+}
+
+.admin-mf-action-select:focus {
+  outline: none;
+  border-color: #0a52be;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Label for form fields */
+.admin-mf-label {
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: 500;
+  margin-bottom: -4px;
+}
+
+/* List of apprenants */
+.admin-apprenants-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Apprenant button */
+.admin-apprenant-button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.admin-apprenant-button:hover:not(:disabled) {
+  background-color: #0056b3;
+  box-shadow: 0 2px 6px rgba(0, 86, 179, 0.3);
+}
+
+.admin-apprenant-button:active:not(:disabled) {
+  background-color: #004085;
+}
+
+.admin-apprenant-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+

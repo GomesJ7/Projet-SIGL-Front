@@ -1,0 +1,228 @@
+/* Overlay pour le modal */
+.stages-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Container du modal */
+.stages-modal-content {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Animation d'entrée */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header du modal */
+.stages-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.stages-modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+/* Bouton de fermeture dans le header */
+.stages-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.stages-modal-close:hover {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+/* Body du modal */
+.stages-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Liste des stages */
+.stages-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Carte stage */
+.stage-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  transition: all 0.2s ease;
+}
+
+.stage-card:hover {
+  border-color: #2196F3;
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.1);
+}
+
+/* Header de la carte stage */
+.stage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.stage-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* Badge d'état */
+.stage-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.stage-badge-en_cours {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.stage-badge-validé {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+.stage-badge-en_attente {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.stage-badge-rejeté {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.stage-badge-archivé {
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+/* Détails du stage */
+.stage-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stage-details p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.stage-details strong {
+  color: #333;
+}
+
+/* Message quand aucun stage */
+.no-stages {
+  text-align: center;
+  color: #999;
+  padding: 30px 20px;
+  font-style: italic;
+}
+
+/* Footer du modal */
+.stages-modal-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Bouton de fermeture du footer */
+.stages-modal-close-button {
+  background-color: #f0f0f0;
+  border: 1px solid #d0d0d0;
+  padding: 10px 24px;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+.stages-modal-close-button:hover {
+  background-color: #e0e0e0;
+  border-color: #b0b0b0;
+}
+
+.stages-modal-close-button:active {
+  background-color: #d0d0d0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stages-modal-content {
+    max-width: 95%;
+    max-height: 90vh;
+  }
+
+  .stages-modal-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .stage-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stage-badge {
+    align-self: flex-start;
+  }
+}
+
