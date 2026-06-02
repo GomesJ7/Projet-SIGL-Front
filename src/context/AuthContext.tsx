@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState } from "react";
 import api from "../api/axiosConfig";
 
 export type RoleType = "ADMIN" | "ENSEIGNANT" | "APPRENANT";
@@ -58,9 +58,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider
-      value={{ user, login, logout, loading, error, initAuth, isInitialized }}
-    >
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

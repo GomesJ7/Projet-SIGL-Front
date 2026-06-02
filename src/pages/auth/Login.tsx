@@ -19,7 +19,8 @@ const Login = () => {
     }
   }, [error]);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     setError("");
 
     if (!email.trim() || !password.trim()) {

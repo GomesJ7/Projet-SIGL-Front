@@ -28,9 +28,9 @@ const Home = () => {
 
   const getRoleLabel = (role: string): string => {
     const roleLabels: { [key: string]: string } = {
-      admin: "👨‍💼 Administrateur",
-      teacher: "👨‍🏫 Enseignant",
-      student: "🎓 Apprenant",
+      ADMIN: "👨‍💼 Administrateur",
+      ENSEIGNANT: "👨‍🏫 Enseignant",
+      APPRENANT: "🎓 Apprenant",
     };
     return roleLabels[role] || role;
   };
@@ -83,7 +83,7 @@ const Home = () => {
         )}
       </section>
 
-      {user && user.role === "admin" && (
+      {user && user.role === "ADMIN" && (
         <section className="home-admin-dashboard">
           <div className="home-admin-container">
             <h2>📊 Tableau de Bord Administrateur</h2>

@@ -1,6 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
-import { useAuth } from "./context/AuthContext";
 import Home from "./pages/home/Home";
 import Login from "./pages/auth/Login";
 import Administrateur from "./pages/administrateur/Administrateur";
@@ -16,14 +14,6 @@ import AdminModules from "./pages/admin/AdminModules";
 import AdminSalles from "./pages/admin/AdminSalles";
 import AdminJuries from "./pages/admin/AdminJuries";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { AuthProvider } from "./context/AuthContext";
-import ModulesFilieresManagement from "./pages/administrateur/ModulesFilieresManagement";
-import ApprenantManagement from "./pages/administrateur/ApprenantManagement";
-import EnseignantManagement from "./pages/administrateur/EnseignantManagement";
-import StageManagement from "./pages/administrateur/StageManagement";
-import SoutenanceManagement from "./pages/administrateur/SoutenanceManagement";
-import EntrepriseManagement from "./pages/administrateur/EntrepriseManagement";
-import StatsReports from "./pages/administrateur/StatsReports";
 import MyModules from "./pages/enseignant/MyModules";
 import EncadrementStages from "./pages/enseignant/EncadrementStages";
 import EvaluationRapports from "./pages/enseignant/EvaluationRapports";
@@ -34,13 +24,6 @@ import MesResultats from "./pages/apprenant/MesResultats";
 import MesContacts from "./pages/apprenant/MesContacts";
 
 function App() {
-  const { initAuth } = useAuth();
-
-  // Initialiser l'authentification au démarrage
-  useEffect(() => {
-    initAuth();
-  }, [initAuth]);
-
   return (
     <BrowserRouter>
       <Routes>
@@ -62,6 +45,18 @@ function App() {
         <Route path="/administrateur" element={<ProtectedRoute><Administrateur /></ProtectedRoute>} />
         <Route path="/enseignant"     element={<ProtectedRoute><Enseignant /></ProtectedRoute>} />
         <Route path="/apprenant"      element={<ProtectedRoute><Apprenant /></ProtectedRoute>} />
+
+        {/* Pages Enseignant */}
+        <Route path="/enseignant/modules"          element={<ProtectedRoute><MyModules /></ProtectedRoute>} />
+        <Route path="/enseignant/stages"           element={<ProtectedRoute><EncadrementStages /></ProtectedRoute>} />
+        <Route path="/enseignant/rapports"         element={<ProtectedRoute><EvaluationRapports /></ProtectedRoute>} />
+        <Route path="/enseignant/soutenances"      element={<ProtectedRoute><JurySoutenance /></ProtectedRoute>} />
+
+        {/* Pages Apprenant */}
+        <Route path="/apprenant/profil"            element={<ProtectedRoute><MonProfilAcademique /></ProtectedRoute>} />
+        <Route path="/apprenant/stages"            element={<ProtectedRoute><MesStagesRapports /></ProtectedRoute>} />
+        <Route path="/apprenant/resultats"         element={<ProtectedRoute><MesResultats /></ProtectedRoute>} />
+        <Route path="/apprenant/contacts"          element={<ProtectedRoute><MesContacts /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );

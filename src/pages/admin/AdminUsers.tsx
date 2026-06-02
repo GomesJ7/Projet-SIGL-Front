@@ -117,7 +117,7 @@ const AdminUsers = () => {
   const visible = filter === "ALL" ? users : users.filter(u => u.role === filter);
   const counts = { ALL: users.length, APPRENANT: users.filter(u => u.role === "APPRENANT").length, ENSEIGNANT: users.filter(u => u.role === "ENSEIGNANT").length, ADMIN: users.filter(u => u.role === "ADMIN").length };
 
-  if (user?.role !== "admin") return (
+  if (user?.role !== "ADMIN") return (
     <div className="admin-error"><h2>❌ Accès refusé</h2>
       <button onClick={() => navigate("/")} className="admin-back-button">← Retour</button></div>
   );

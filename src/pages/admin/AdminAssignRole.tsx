@@ -6,7 +6,7 @@ const AdminAssignRole = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  if (user?.role !== "admin") {
+  if (user?.role !== "ADMIN") {
     return (
       <div className="admin-error">
         <h2>❌ Accès refusé</h2>

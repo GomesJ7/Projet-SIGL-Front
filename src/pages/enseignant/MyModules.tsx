@@ -104,7 +104,7 @@ const MyModules = () => {
           <h1 className="admin-title">Mes Modules</h1>
           <div className="admin-mf-actions">
             <button onClick={handleBack} className="admin-mf-back-button">Retour</button>
-            <button onClick={handleLogout} className="admin-logout-button">Logout</button>
+            <button onClick={handleLogout} className="admin-logout-button">Déconnexion</button>
           </div>
         </div>
 

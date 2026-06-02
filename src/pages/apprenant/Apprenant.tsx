@@ -41,7 +41,7 @@ const StudentSpace = () => {
         <div className="apprenant-header">
           <h1 className="apprenant-title">Espace Apprenant</h1>
           <button onClick={handleLogout} className="apprenant-logout-button">
-            Logout
+            Déconnexion
           </button>
         </div>
 

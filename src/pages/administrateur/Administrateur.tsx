@@ -17,37 +17,8 @@ const MODULES = [
 const Admin = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const displayName = [user?.prenom, user?.nom].filter(Boolean).join(" ");
 
   const handleLogout = () => { logout(); navigate("/login"); };
-
-  const handleManageModulesFilieres = () => {
-    navigate("/administrateur/modules-filieres");
-  };
-
-  const handleManageApprenants = () => {
-    navigate("/administrateur/apprenants");
-  };
-
-  const handleManageEnseignants = () => {
-    navigate("/administrateur/enseignants");
-  };
-
-  const handleManageStages = () => {
-    navigate("/administrateur/stages");
-  };
-
-  const handleManageSoutenances = () => {
-    navigate("/administrateur/soutenances");
-  };
-
-  const handleManageEntreprises = () => {
-    navigate("/administrateur/entreprises");
-  };
-
-  const handleManageStats = () => {
-    navigate("/administrateur/statistiques");
-  };
 
   return (
     <div className="admin-container">
@@ -55,7 +26,7 @@ const Admin = () => {
       <div className="admin-wrapper">
         <div className="admin-header">
           <h1 className="admin-title">Espace Administrateur</h1>
-          <button onClick={handleLogout} className="admin-logout-button">Logout</button>
+          <button onClick={handleLogout} className="admin-logout-button">Déconnexion</button>
         </div>
 
         <div className="admin-user-info">

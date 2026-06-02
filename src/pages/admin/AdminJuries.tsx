@@ -89,7 +89,7 @@ const AdminJuries = () => {
 
   const reset = () => { setNomJury(""); setEditing(null); setShowForm(false); };
 
-  if (user?.role !== "admin") return (
+  if (user?.role !== "ADMIN") return (
     <div className="admin-error"><h2>❌ Accès refusé</h2><button onClick={() => navigate("/")} className="admin-back-button">← Retour</button></div>
   );
 

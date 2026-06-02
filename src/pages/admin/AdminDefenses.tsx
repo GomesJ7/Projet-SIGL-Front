@@ -92,7 +92,7 @@ const AdminDefenses = () => {
   const salleLabel = (id: number) => { const s = salles.find(x => x.idSalle === id); return s ? s.nomSalle : "—"; };
   const juryLabel  = (id: number) => { const j = juries.find(x => x.idJury === id); return j ? j.nomJury : "—"; };
 
-  if (user?.role !== "admin") return (
+  if (user?.role !== "ADMIN") return (
     <div className="admin-error"><h2>❌ Accès refusé</h2>
       <button onClick={() => navigate("/")} className="admin-back-button">← Retour</button></div>
   );

@@ -124,7 +124,7 @@ const MesResultats = () => {
           <h1 className="admin-title">Mes resultats</h1>
           <div className="admin-mf-actions">
             <button onClick={() => navigate("/apprenant")} className="admin-mf-back-button">Retour</button>
-            <button onClick={() => { logout(); navigate("/login"); }} className="admin-logout-button">Logout</button>
+            <button onClick={() => { logout(); navigate("/login"); }} className="admin-logout-button">Déconnexion</button>
           </div>
         </div>
 

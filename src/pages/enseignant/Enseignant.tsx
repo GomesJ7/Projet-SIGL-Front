@@ -41,7 +41,7 @@ const Teacher = () => {
         <div className="enseignant-header">
           <h1 className="enseignant-title">Espace Enseignant</h1>
           <button onClick={handleLogout} className="enseignant-logout-button">
-            Logout
+            Déconnexion
           </button>
         </div>
 

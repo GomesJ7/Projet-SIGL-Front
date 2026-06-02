@@ -213,7 +213,7 @@ const MonProfilAcademique = () => {
           </div>
           <div className="profil-actions">
             <button onClick={() => navigate("/apprenant")} className="profil-back-button">Retour</button>
-            <button onClick={() => { logout(); navigate("/login"); }} className="profil-logout-button">Logout</button>
+            <button onClick={() => { logout(); navigate("/login"); }} className="profil-logout-button">Déconnexion</button>
           </div>
         </div>
 
