@@ -2,150 +2,47 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import "../../css/Administrateur.css";
 
+const MODULES = [
+  { icon: "👥", title: "Utilisateurs", desc: ["CRUD apprenants, enseignants, admins", "Affectation promotion / filière"], path: "/admin/users", btn: "Gérer les utilisateurs" },
+  { icon: "💼", title: "Stages", desc: ["Création de stages", "Affectation apprenant / encadrant", "Suivi de l'état"], path: "/admin/stages", btn: "Gérer les stages" },
+  { icon: "🏢", title: "Entreprises", desc: ["Entreprises partenaires", "Contacts & adresses"], path: "/admin/companies", btn: "Gérer les entreprises" },
+  { icon: "🎓", title: "Soutenances", desc: ["Planification", "Salle & jury", "Verdict / note"], path: "/admin/defenses", btn: "Gérer les soutenances" },
+  { icon: "📚", title: "Filières", desc: ["Créer / modifier les filières"], path: "/admin/filieres", btn: "Gérer les filières" },
+  { icon: "🎓", title: "Promotions", desc: ["Créer / modifier les promotions"], path: "/admin/promotions", btn: "Gérer les promotions" },
+  { icon: "📖", title: "Modules", desc: ["Modules & crédits", "Affectation d'enseignants"], path: "/admin/modules", btn: "Gérer les modules" },
+  { icon: "🚪", title: "Salles", desc: ["Salles & localisations"], path: "/admin/salles", btn: "Gérer les salles" },
+  { icon: "👨‍⚖️", title: "Jurys", desc: ["Jurys de soutenance", "Membres & rôles"], path: "/admin/juries", btn: "Gérer les jurys" },
+];
+
 const Admin = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
-
-  const handleHomeClick = () => {
-    navigate("/");
-  };
+  const handleLogout = () => { logout(); navigate("/login"); };
 
   return (
     <div className="admin-container">
-      <button onClick={handleHomeClick} className="admin-home-button" title="Retour à l'accueil">
-        🏠
-      </button>
+      <button onClick={() => navigate("/")} className="admin-home-button" title="Retour à l'accueil">🏠</button>
       <div className="admin-wrapper">
         <div className="admin-header">
           <h1 className="admin-title">Espace Administrateur</h1>
-          <button onClick={handleLogout} className="admin-logout-button">
-            Logout
-          </button>
+          <button onClick={handleLogout} className="admin-logout-button">Logout</button>
         </div>
 
         <div className="admin-user-info">
-          <p><strong>Utilisateur connecté:</strong> {user?.name}</p>
-          <p><strong>Login:</strong> {user?.login}</p>
-          <p><strong>Rôle:</strong> {user?.role}</p>
+          <p><strong>Utilisateur connecté :</strong> {user?.prenom} {user?.nom}</p>
+          <p><strong>Email :</strong> {user?.email}</p>
+          <p><strong>Rôle :</strong> {user?.role}</p>
         </div>
 
         <div className="admin-modules-grid">
-          {/* Gestion des Apprenants */}
-          <div className="admin-module-card">
-            <h3>Gestion des Apprenants</h3>
-            <ul>
-              <li>• CRUD des apprenants</li>
-              <li>• Affectation filière/promotion</li>
-              <li>• Suivi académique</li>
-              <li>• Historique des stages</li>
-            </ul>
-            <button className="admin-module-button">
-              Gérer apprenants
-            </button>
-          </div>
-
-          {/* Gestion des Enseignants */}
-          <div className="admin-module-card">
-            <h3>Gestion des Enseignants</h3>
-            <ul>
-              <li>• Créer/modifier des enseignants</li>
-              <li>• Affectation aux modules</li>
-              <li>• Encadrement des stages</li>
-              <li>• Participation aux jurys</li>
-            </ul>
-            <button className="admin-module-button">
-              Gérer enseignants
-            </button>
-          </div>
-
-          {/* Gestion des Stages */}
-          <div className="admin-module-card">
-            <h3>Gestion des Stages</h3>
-            <ul>
-              <li>• Création de stages</li>
-              <li>• Affectation apprenants</li>
-              <li>• Affectation encadrants</li>
-              <li>• Suivi état (En cours/Terminé/Validé)</li>
-            </ul>
-            <button className="admin-module-button">
-              Gérer stages
-            </button>
-          </div>
-
-          {/* Gestion des Rapports */}
-          <div className="admin-module-card">
-            <h3>Gestion des Rapports</h3>
-            <ul>
-              <li>• Upload des rapports PDF</li>
-              <li>• Consultation des rapports</li>
-              <li>• Évaluation par enseignants</li>
-              <li>• Validation/Rejet</li>
-            </ul>
-            <button className="admin-module-button">
-              Gérer rapports
-            </button>
-          </div>
-
-          {/* Gestion des Soutenances */}
-          <div className="admin-module-card">
-            <h3>Gestion des Soutenances</h3>
-            <ul>
-              <li>• Organisation des jurys</li>
-              <li>• Planification des dates</li>
-              <li>• Affectation des membres</li>
-              <li>• Suivi des résultats</li>
-            </ul>
-            <button className="admin-module-button">
-              Gérer soutenances
-            </button>
-          </div>
-
-          {/* Gestion des Entreprises */}
-          <div className="admin-module-card">
-            <h3>Entreprises Partenaires</h3>
-            <ul>
-              <li>• Ajouter/supprimer les entreprises</li>
-              <li>• Gestion des contacts</li>
-              <li>• Suivi des partenariats</li>
-              <li>• Historique des stages</li>
-            </ul>
-            <button className="admin-module-button">
-              Gérer entreprises
-            </button>
-          </div>
-
-          {/* Affectations Pédagogiques */}
-          <div className="admin-module-card">
-            <h3>Affectations Pédagogiques</h3>
-            <ul>
-              <li>• Modules ↔ Enseignants</li>
-              <li>• Apprenants ↔ Filières</li>
-              <li>• Stages ↔ Encadrants</li>
-              <li>• Jurys ↔ Membres</li>
-            </ul>
-            <button className="admin-module-button">
-              Gérer affectations
-            </button>
-          </div>
-
-          {/* Statistiques et Rapports */}
-          <div className="admin-module-card">
-            <h3>Statistiques & Rapports</h3>
-            <ul>
-              <li>• Taux de réussite</li>
-              <li>• Répartition par filière</li>
-              <li>• Évolution des stages</li>
-              <li>• Performance enseignants</li>
-            </ul>
-            <button className="admin-module-button">
-              Voir statistiques
-            </button>
-          </div>
+          {MODULES.map((m) => (
+            <div className="admin-module-card" key={m.path + m.title}>
+              <h3>{m.icon} {m.title}</h3>
+              <ul>{m.desc.map((d, i) => <li key={i}>• {d}</li>)}</ul>
+              <button className="admin-module-button" onClick={() => navigate(m.path)}>{m.btn}</button>
+            </div>
+          ))}
         </div>
       </div>
     </div>

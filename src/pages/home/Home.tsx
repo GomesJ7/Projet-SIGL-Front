@@ -1,7 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import logoESEO from "../../images/ESEO.jpeg";
+import logoESEO from "../../images/ESEO.png";
 import "../../css/Home.css";
+
+const ADMIN_CARDS = [
+  { icon: "👥", title: "Utilisateurs", desc: "Créer, modifier et supprimer les utilisateurs (apprenants, enseignants, admins)", path: "/admin/users" },
+  { icon: "💼", title: "Stages", desc: "Créer les stages, affecter apprenants/encadrants et suivre l'état", path: "/admin/stages" },
+  { icon: "🏢", title: "Entreprises", desc: "Gérer les entreprises partenaires et leurs contacts", path: "/admin/companies" },
+  { icon: "🎓", title: "Soutenances", desc: "Planifier les soutenances, salles, jurys et verdicts", path: "/admin/defenses" },
+  { icon: "📚", title: "Filières", desc: "Créer et organiser les filières", path: "/admin/filieres" },
+  { icon: "🎓", title: "Promotions", desc: "Gérer les promotions par année", path: "/admin/promotions" },
+  { icon: "📖", title: "Modules", desc: "Modules, crédits et affectation d'enseignants", path: "/admin/modules" },
+  { icon: "🚪", title: "Salles", desc: "Gérer les salles et localisations", path: "/admin/salles" },
+  { icon: "👨‍⚖️", title: "Jurys", desc: "Composer les jurys de soutenance", path: "/admin/juries" },
+];
 
 const Home = () => {
   const navigate = useNavigate();
@@ -18,21 +30,17 @@ const Home = () => {
     const roleLabels: { [key: string]: string } = {
       admin: "👨‍💼 Administrateur",
       teacher: "👨‍🏫 Enseignant",
-      student: "🎓 Apprenant"
+      student: "🎓 Apprenant",
     };
     return roleLabels[role] || role;
   };
 
   return (
     <div className="home-container">
-      {/* Navigation Bar */}
       <nav className="home-nav">
         <div className="home-nav-logo">
-          <img
-            src={logoESEO}
-            alt="Logo HIGH SCHOOL"
-          />
-          <h2>HIGH SCHOOL</h2>
+          <img src={logoESEO} alt="Logo ES SCHOOL" />
+          <h2>ES SCHOOL</h2>
         </div>
         <div className="home-nav-actions">
           {user ? (
@@ -41,208 +49,72 @@ const Home = () => {
                 <span className="home-user-name">{user.prenom} {user.nom}</span>
                 <span className="home-user-role">{getRoleLabel(user.role)}</span>
               </div>
-              <button
-                onClick={handleLogout}
-                className="home-nav-logout-button"
-                title="Se déconnecter"
-              >
+              <button onClick={handleLogout} className="home-nav-logout-button" title="Se déconnecter">
                 🚪 Déconnexion
               </button>
             </div>
           ) : (
-            <button
-              onClick={() => navigate("/login")}
-              className="home-nav-button"
-            >
+            <button onClick={() => navigate("/login")} className="home-nav-button">
               Connexion
             </button>
           )}
         </div>
       </nav>
 
-      {/* Hero Section */}
       <section className="home-hero">
-        <img
-          src={logoESEO}
-          alt="Logo HIGH SCHOOL"
-        />
+        <img src={logoESEO} alt="Logo ES SCHOOL" />
         {user ? (
           <>
-            <h1>
-              Bienvenue, {user.prenom} {user.nom} !
-            </h1>
-            <p>
-              Vous êtes connecté en tant que <strong>{getRoleLabel(user.role)}</strong>
-            </p>
+            <h1>Bienvenue, {user.prenom} {user.nom}</h1>
+            <p>Vous êtes connecté en tant que <strong>{getRoleLabel(user.role)}</strong></p>
             <div className="home-user-details">
-              <div className="home-detail-card">
-                <span className="detail-label">Email :</span>
-                <span className="detail-value">{user.email}</span>
-              </div>
-              <div className="home-detail-card">
-                <span className="detail-label">ID Utilisateur :</span>
-                <span className="detail-value">#{user.idUtilisateur}</span>
-              </div>
             </div>
           </>
         ) : (
           <>
-            <h1>
-              Bienvenue à HIGH SCHOOL
-            </h1>
-            <p>
-              Plateforme de gestion académique complète pour notre établissement
-            </p>
+            <h1>Bienvenue à ES SCHOOL</h1>
+            <p>Plateforme de gestion académique complète pour notre établissement</p>
           </>
         )}
         {!user && (
-          <button
-            onClick={() => navigate("/login")}
-            className="home-hero-button"
-          >
+          <button onClick={() => navigate("/login")} className="home-hero-button">
             Accéder à la plateforme
           </button>
         )}
       </section>
 
-      {/* Features Section */}
-      <section className="home-features">
-        <h2>
-          Caractéristiques de la Plateforme
-        </h2>
-
-        <div className="home-features-grid">
-          {/* Feature 1 */}
-          <div className="home-feature-card">
-            <div className="emoji">🎓</div>
-            <h3>Gestion des Apprenants</h3>
-            <p>
-              Gestion complète des apprenants avec suivi académique, affectation à des filières et promotion
-            </p>
-          </div>
-
-          {/* Feature 2 */}
-          <div className="home-feature-card">
-            <div className="emoji">👨‍🏫</div>
-            <h3>Gestion des Enseignants</h3>
-            <p>
-              Affectation des modules, encadrement des stages et participation aux jurys de soutenance
-            </p>
-          </div>
-
-          {/* Feature 3 */}
-          <div className="home-feature-card">
-            <div className="emoji">💼</div>
-            <h3>Gestion des Stages</h3>
-            <p>
-              Création et suivi des stages, affectation des apprenants et encadrants, suivi d'état en temps réel
-            </p>
-          </div>
-
-          {/* Feature 4 */}
-          <div className="home-feature-card">
-            <div className="emoji">📄</div>
-            <h3>Gestion des Rapports</h3>
-            <p>
-              Dépôt et consultation des rapports de stage avec évaluation et notation par les enseignants
-            </p>
-          </div>
-
-          {/* Feature 5 */}
-          <div className="home-feature-card">
-            <div className="emoji">⚖️</div>
-            <h3>Gestion des Soutenances</h3>
-            <p>
-              Organisation complète des jurys, planification des dates et suivi des résultats
-            </p>
-          </div>
-
-          {/* Feature 6 */}
-          <div className="home-feature-card">
-            <div className="emoji">📊</div>
-            <h3>Statistiques & Rapports</h3>
-            <p>
-              Tableaux de bord détaillés avec statistiques, taux de réussite et évolution des performances
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* About School Section */}
-      <section className="home-about">
-        <div className="home-about-container">
-          <h2>
-            À Propos de l'École
-          </h2>
-          <div className="home-about-grid">
-            <div className="home-about-item">
-              <h3>
-                📍 Notre Mission
-              </h3>
-              <p>
-                HIGH SCHOOL s'engage à fournir une éducation de qualité supérieure en combinant l'excellence académique avec
-                l'expérience pratique. Nous préparons les étudiants à devenir des professionnels compétents et innovants.
-              </p>
-            </div>
-
-            <div className="home-about-item">
-              <h3>
-                🎯 Nos Valeurs
-              </h3>
-              <ul>
-                <li>✓ Excellence académique</li>
-                <li>✓ Innovation et créativité</li>
-                <li>✓ Intégrité et transparence</li>
-                <li>✓ Collaboration et entraide</li>
-              </ul>
-            </div>
-
-            <div className="home-about-item">
-              <h3>
-                🏆 Nos Atouts
-              </h3>
-              <ul>
-                <li>✓ Enseignants expérimentés</li>
-                <li>✓ Partenaires industriels</li>
-                <li>✓ Équipements modernes</li>
-                <li>✓ Stages internationaux</li>
-              </ul>
+      {user && user.role === "admin" && (
+        <section className="home-admin-dashboard">
+          <div className="home-admin-container">
+            <h2>📊 Tableau de Bord Administrateur</h2>
+            <p className="admin-subtitle">Gérez l'ensemble des entités de la plateforme</p>
+            <div className="admin-actions-grid">
+              {ADMIN_CARDS.map((c) => (
+                <div
+                  key={c.path}
+                  className="admin-action-card"
+                  onClick={() => navigate(c.path)}
+                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") navigate(c.path); }}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <div className="admin-action-icon">{c.icon}</div>
+                  <h3>{c.title}</h3>
+                  <p>{c.desc}</p>
+                  <span className="admin-action-arrow">→</span>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* CTA Section */}
-      <section className="home-cta">
-        <h2>
-          {user ? "Accédez à votre tableau de bord" : "Prêt à rejoindre HIGH SCHOOL ?"}
-        </h2>
-        <p>
-          {user 
-            ? "Naviguez vers les différentes sections de la plateforme selon votre rôle"
-            : "Accédez à la plateforme pour gérer votre parcours académique"
-          }
-        </p>
-        {!user && (
-          <button
-            onClick={() => navigate("/login")}
-            className="home-cta-button"
-          >
-            Se Connecter
-          </button>
-        )}
-      </section>
-
-      {/* Footer */}
       <footer className="home-footer">
-        <p>© 2026 HIGH SCHOOL - Tous droits réservés</p>
-        <p>
-          Plateforme de Gestion Académique
-        </p>
+        <p>© 2026 ES SCHOOL - Tous droits réservés</p>
+        <p>Plateforme de Gestion Académique</p>
       </footer>
     </div>
   );
 };
 
 export default Home;
-
