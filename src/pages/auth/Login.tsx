@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import logoESEO from "../../images/ESEO.jpeg";
+import logoESEO from "../../images/ESEO.png";
 import "../../css/Login.css";
 
 const Login = () => {
@@ -60,7 +60,7 @@ const Login = () => {
   };
 
   const handleHomeClick = () => {
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   return (
@@ -79,12 +79,12 @@ const Login = () => {
           <div className="login-logo-section">
             <img
               src={logoESEO}
-              alt="Logo ESEO"
+              alt="Logo ES SCHOOL"
               className="login-logo"
             />
             <h2 className="login-title">Connexion</h2>
           </div>
-          <div className="login-form-section">
+          <form onSubmit={handleLogin} className="login-form-section">
             <input
               type="email"
               placeholder="Adresse email"
@@ -106,14 +106,14 @@ const Login = () => {
               disabled={loading}
             />
             <button
-              onClick={handleLogin}
+              type="submit"
               className="login-button"
               disabled={loading}
             >
-              {loading ? "Connexion..." : "Se connecter"}
+              {loading ? "Connexion en cours..." : "Se connecter"}
             </button>
-          </div>
-          {error && <p className="login-error">{error}</p>}
+          </form>
+          {error && <p className="login-error">❌ {error}</p>}
         </div>
       </div>
     </div>

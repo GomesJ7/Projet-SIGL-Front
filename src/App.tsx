@@ -1,9 +1,20 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+import { useAuth } from "./context/AuthContext";
 import Home from "./pages/home/Home";
 import Login from "./pages/auth/Login";
 import Administrateur from "./pages/administrateur/Administrateur";
 import Enseignant from "./pages/enseignant/Enseignant";
 import Apprenant from "./pages/apprenant/Apprenant";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminStages from "./pages/admin/AdminStages";
+import AdminCompanies from "./pages/admin/AdminCompanies";
+import AdminDefenses from "./pages/admin/AdminDefenses";
+import AdminFilieres from "./pages/admin/AdminFilieres";
+import AdminPromotions from "./pages/admin/AdminPromotions";
+import AdminModules from "./pages/admin/AdminModules";
+import AdminSalles from "./pages/admin/AdminSalles";
+import AdminJuries from "./pages/admin/AdminJuries";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import ModulesFilieresManagement from "./pages/administrateur/ModulesFilieresManagement";
@@ -23,180 +34,37 @@ import MesResultats from "./pages/apprenant/MesResultats";
 import MesContacts from "./pages/apprenant/MesContacts";
 
 function App() {
-    return (
-        <AuthProvider>
-            <BrowserRouter>
-                <Routes>
-                    {/* Page d'accueil */}
-                    <Route path="/" element={<Home />} />
+  const { initAuth } = useAuth();
 
-                    <Route path="/login" element={<Login />} />
+  // Initialiser l'authentification au démarrage
+  useEffect(() => {
+    initAuth();
+  }, [initAuth]);
 
-                    <Route
-                        path="/administrateur"
-                        element={
-                            <ProtectedRoute>
-                                <Administrateur />
-                            </ProtectedRoute>
-                        }
-                    />
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
 
-                    <Route
-                        path="/administrateur/modules-filieres"
-                        element={
-                            <ProtectedRoute>
-                                <ModulesFilieresManagement />
-                            </ProtectedRoute>
-                        }
-                    />
+        {/* Pages Admin CRUD */}
+        <Route path="/admin/users"      element={<ProtectedRoute><AdminUsers /></ProtectedRoute>} />
+        <Route path="/admin/stages"     element={<ProtectedRoute><AdminStages /></ProtectedRoute>} />
+        <Route path="/admin/companies"  element={<ProtectedRoute><AdminCompanies /></ProtectedRoute>} />
+        <Route path="/admin/defenses"   element={<ProtectedRoute><AdminDefenses /></ProtectedRoute>} />
+        <Route path="/admin/filieres"   element={<ProtectedRoute><AdminFilieres /></ProtectedRoute>} />
+        <Route path="/admin/promotions" element={<ProtectedRoute><AdminPromotions /></ProtectedRoute>} />
+        <Route path="/admin/modules"    element={<ProtectedRoute><AdminModules /></ProtectedRoute>} />
+        <Route path="/admin/salles"     element={<ProtectedRoute><AdminSalles /></ProtectedRoute>} />
+        <Route path="/admin/juries"     element={<ProtectedRoute><AdminJuries /></ProtectedRoute>} />
 
-                    <Route
-                        path="/administrateur/apprenants"
-                        element={
-                            <ProtectedRoute>
-                                <ApprenantManagement />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    <Route
-                        path="/administrateur/enseignants"
-                        element={
-                            <ProtectedRoute>
-                                <EnseignantManagement />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    <Route
-                        path="/administrateur/stages"
-                        element={
-                            <ProtectedRoute>
-                                <StageManagement />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    <Route
-                        path="/administrateur/soutenances"
-                        element={
-                            <ProtectedRoute>
-                                <SoutenanceManagement />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    <Route
-                        path="/administrateur/entreprises"
-                        element={
-                            <ProtectedRoute>
-                                <EntrepriseManagement />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    <Route
-                        path="/administrateur/statistiques"
-                        element={
-                            <ProtectedRoute>
-                                <StatsReports />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    <Route
-                        path="/enseignant"
-                        element={
-                            <ProtectedRoute>
-                                <Enseignant />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    <Route
-                        path="/enseignant/mes-modules"
-                        element={
-                            <ProtectedRoute>
-                                <MyModules />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    <Route
-                        path="/enseignant/encadrement-stages"
-                        element={
-                            <ProtectedRoute>
-                                <EncadrementStages />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    <Route
-                        path="/enseignant/jury-soutenances"
-                        element={
-                            <ProtectedRoute>
-                                <JurySoutenance />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    <Route
-                        path="/enseignant/evaluation-rapports"
-                        element={
-                            <ProtectedRoute>
-                                <EvaluationRapports />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    <Route
-                        path="/apprenant"
-                        element={
-                            <ProtectedRoute>
-                                <Apprenant />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    <Route
-                        path="/apprenant/profil-academique"
-                        element={
-                            <ProtectedRoute>
-                                <MonProfilAcademique />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    <Route
-                        path="/apprenant/stages-rapports"
-                        element={
-                            <ProtectedRoute>
-                                <MesStagesRapports />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    <Route
-                        path="/apprenant/resultats"
-                        element={
-                            <ProtectedRoute>
-                                <MesResultats />
-                            </ProtectedRoute>
-                        }
-                    />
-
-                    <Route
-                        path="/apprenant/contacts"
-                        element={
-                            <ProtectedRoute>
-                                <MesContacts />
-                            </ProtectedRoute>
-                        }
-                    />
-                </Routes>
-            </BrowserRouter>
-        </AuthProvider>
-    );
+        {/* Pages par rôle */}
+        <Route path="/administrateur" element={<ProtectedRoute><Administrateur /></ProtectedRoute>} />
+        <Route path="/enseignant"     element={<ProtectedRoute><Enseignant /></ProtectedRoute>} />
+        <Route path="/apprenant"      element={<ProtectedRoute><Apprenant /></ProtectedRoute>} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
