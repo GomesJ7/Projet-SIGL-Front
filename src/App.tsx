@@ -13,6 +13,14 @@ import StageManagement from "./pages/administrateur/StageManagement";
 import SoutenanceManagement from "./pages/administrateur/SoutenanceManagement";
 import EntrepriseManagement from "./pages/administrateur/EntrepriseManagement";
 import StatsReports from "./pages/administrateur/StatsReports";
+import MyModules from "./pages/enseignant/MyModules";
+import EncadrementStages from "./pages/enseignant/EncadrementStages";
+import EvaluationRapports from "./pages/enseignant/EvaluationRapports";
+import JurySoutenance from "./pages/enseignant/JurySoutenance";
+import MonProfilAcademique from "./pages/apprenant/MonProfilAcademique";
+import MesStagesRapports from "./pages/apprenant/MesStagesRapports";
+import MesResultats from "./pages/apprenant/MesResultats";
+import MesContacts from "./pages/apprenant/MesContacts";
 
 function App() {
     return (
@@ -106,10 +114,82 @@ function App() {
                     />
 
                     <Route
+                        path="/enseignant/mes-modules"
+                        element={
+                            <ProtectedRoute>
+                                <MyModules />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/enseignant/encadrement-stages"
+                        element={
+                            <ProtectedRoute>
+                                <EncadrementStages />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/enseignant/jury-soutenances"
+                        element={
+                            <ProtectedRoute>
+                                <JurySoutenance />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/enseignant/evaluation-rapports"
+                        element={
+                            <ProtectedRoute>
+                                <EvaluationRapports />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
                         path="/apprenant"
                         element={
                             <ProtectedRoute>
                                 <Apprenant />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/apprenant/profil-academique"
+                        element={
+                            <ProtectedRoute>
+                                <MonProfilAcademique />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/apprenant/stages-rapports"
+                        element={
+                            <ProtectedRoute>
+                                <MesStagesRapports />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/apprenant/resultats"
+                        element={
+                            <ProtectedRoute>
+                                <MesResultats />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/apprenant/contacts"
+                        element={
+                            <ProtectedRoute>
+                                <MesContacts />
                             </ProtectedRoute>
                         }
                     />
