@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import type { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +23,7 @@ interface RapportItem {
   titre?: string;
   fichier?: string;
   fichierPath?: string;
+  nomFichier?: string;
   versionRapport?: string;
   statut?: string;
   note?: number | null;
@@ -47,6 +48,7 @@ const STATUT_LABELS: Record<string, string> = {
 const MesStagesRapports = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const displayName = [user?.prenom, user?.nom].filter(Boolean).join(" ");
 
   const [stages, setStages] = useState<StageItem[]>([]);
@@ -54,9 +56,8 @@ const MesStagesRapports = () => {
 
   const [selectedStageId, setSelectedStageId] = useState("");
   const [titre, setTitre] = useState("");
-  const [fichierPath, setFichierPath] = useState("");
   const [versionRapport, setVersionRapport] = useState("v1");
-  const [fichier, setFichier] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -137,40 +138,43 @@ const MesStagesRapports = () => {
       return;
     }
 
-    if (!fichierPath.trim()) {
-      setError("Le lien du fichier (fichier_path) est obligatoire.");
-      return;
-    }
-
     if (!versionRapport.trim()) {
       setError("La version est obligatoire.");
       return;
     }
 
-    if (!fichier.trim()) {
-      setError("Le nom du fichier PDF est obligatoire.");
+    if (!selectedFile) {
+      setError("Veuillez selectionner un fichier PDF.");
+      return;
+    }
+
+    const isPdf =
+      selectedFile.type === "application/pdf" || selectedFile.name.toLowerCase().endsWith(".pdf");
+
+    if (!isPdf) {
+      setError("Seuls les fichiers PDF sont autorises.");
       return;
     }
 
     setLoading(true);
     try {
-      await api.post("/rapports", {
-        idStage: Number(selectedStageId),
-        idApprenant: user.idUtilisateur,
-        titre: titre.trim(),
-        fichierPath: fichierPath.trim(),
-        versionRapport: versionRapport.trim(),
-        fichier: fichier.trim(),
-      });
-      setMessage("Rapport cree en base avec succes.");
+      const formData = new FormData();
+      formData.append("idStage", selectedStageId);
+      formData.append("idApprenant", String(user.idUtilisateur));
+      formData.append("titre", titre.trim());
+      formData.append("versionRapport", versionRapport.trim());
+      formData.append("fichier", selectedFile);
+
+      await api.post("/rapports", formData);
+      setMessage("Rapport depose avec succes.");
       setSelectedStageId("");
       setTitre("");
-      setFichierPath("");
       setVersionRapport("v1");
-      setFichier("");
+      setSelectedFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
       await loadData();
     } catch (err: unknown) {
-      setError(getApiErrorMessage(err, "Impossible de creer le rapport."));
+      setError(getApiErrorMessage(err, "Impossible de deposer le rapport."));
     } finally {
       setLoading(false);
     }
@@ -243,12 +247,18 @@ const MesStagesRapports = () => {
               />
 
               <input
-                type="text"
-                value={fichierPath}
-                onChange={(e) => setFichierPath(e.target.value)}
-                placeholder="Lien du fichier (fichier_path) *"
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf,application/pdf"
+                onChange={(e) => setSelectedFile(e.target.files?.[0] ?? null)}
                 disabled={loading}
               />
+
+              {selectedFile && (
+                <p className="admin-mf-info" style={{ marginTop: -4 }}>
+                  Fichier selectionne : <strong>{selectedFile.name}</strong>
+                </p>
+              )}
 
               <input
                 type="text"
@@ -258,16 +268,8 @@ const MesStagesRapports = () => {
                 disabled={loading}
               />
 
-              <input
-                type="text"
-                value={fichier}
-                onChange={(e) => setFichier(e.target.value)}
-                placeholder="Nom du fichier PDF (fichier) *"
-                disabled={loading}
-              />
-
               <button type="submit" className="admin-module-button" disabled={loading || stagesSansRapport.length === 0}>
-                Creer le rapport
+                Deposer le rapport
               </button>
 
               {stagesSansRapport.length === 0 && (
@@ -301,8 +303,7 @@ const MesStagesRapports = () => {
                           <p><strong>Rapport :</strong> depose le {new Date(rapport.dateDepot).toLocaleDateString("fr-FR")}</p>
                           {rapport.titre && <p><strong>Titre :</strong> {rapport.titre}</p>}
                           {rapport.versionRapport && <p><strong>Version :</strong> {rapport.versionRapport}</p>}
-                          {rapport.fichier && <p><strong>Fichier :</strong> {rapport.fichier}</p>}
-                          {rapport.fichierPath && <p><strong>Fichier path :</strong> {rapport.fichierPath}</p>}
+                          {rapport.nomFichier && <p><strong>Fichier :</strong> {rapport.nomFichier}</p>}
                           <p><strong>Statut :</strong> {rapport.statut ? STATUT_LABELS[rapport.statut] || rapport.statut : "Non defini"}</p>
                           <p><strong>Note :</strong> {rapport.note ?? "Non evalue"}</p>
                           {rapport.commentaire && <p><strong>Commentaire :</strong> {rapport.commentaire}</p>}

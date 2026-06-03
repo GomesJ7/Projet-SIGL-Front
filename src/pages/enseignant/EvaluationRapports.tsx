@@ -203,6 +203,26 @@ const EvaluationRapports = () => {
     }
   };
 
+  const handleChangerStatut = async (
+    idRapport: number,
+    statut: "EN_ATTENTE" | "VALIDE" | "REFUSE"
+  ) => {
+    setLoading(true);
+    try {
+      await api.patch(`/rapports/${idRapport}/statut`, null, {
+        params: { statut },
+      });
+      setMessage("Statut du rapport mis a jour.");
+      if (user?.idUtilisateur) {
+        await load(user.idUtilisateur);
+      }
+    } catch (err: unknown) {
+      setError(getApiErrorMessage(err, "Echec du changement de statut."));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleTelecharger = async (rapport: RapportItem) => {
     try {
       const res = await api.get(`/rapports/${rapport.idRapport}/fichier`, {
@@ -332,6 +352,21 @@ const EvaluationRapports = () => {
                         flexWrap: "wrap",
                       }}
                     >
+                      <select
+                        value={r.statut}
+                        disabled={loading}
+                        onChange={(e) =>
+                          handleChangerStatut(
+                            r.idRapport,
+                            e.target.value as "EN_ATTENTE" | "VALIDE" | "REFUSE"
+                          )
+                        }
+                        style={{ padding: "8px", borderRadius: "4px", border: "1px solid #ced4da" }}
+                      >
+                        <option value="EN_ATTENTE">En attente</option>
+                        <option value="VALIDE">Valide</option>
+                        <option value="REFUSE">Refuse</option>
+                      </select>
                       <button
                         className="admin-module-button"
                         disabled={loading}
@@ -421,6 +456,21 @@ const EvaluationRapports = () => {
                         flexWrap: "wrap",
                       }}
                     >
+                      <select
+                        value={r.statut}
+                        disabled={loading}
+                        onChange={(e) =>
+                          handleChangerStatut(
+                            r.idRapport,
+                            e.target.value as "EN_ATTENTE" | "VALIDE" | "REFUSE"
+                          )
+                        }
+                        style={{ padding: "8px", borderRadius: "4px", border: "1px solid #ced4da" }}
+                      >
+                        <option value="EN_ATTENTE">En attente</option>
+                        <option value="VALIDE">Valide</option>
+                        <option value="REFUSE">Refuse</option>
+                      </select>
                       {r.statut === "EN_ATTENTE" && (
                         <>
                           <button

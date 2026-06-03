@@ -80,10 +80,10 @@ const Teacher = () => {
           </div>
 
           <div className="enseignant-module-card">
-            <h3> Évaluation des Rapports</h3>
-            <p>Évaluer et commenter les rapports de stage</p>
+            <h3> Gestion des rapports</h3>
+            <p>Évaluer, commenter et changer le statut des rapports</p>
             <button className="enseignant-module-button" onClick={handleEvaluationRapports}>
-              Rapports à évaluer
+              Gérer les rapports
             </button>
           </div>
 
