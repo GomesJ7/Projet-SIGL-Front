@@ -32,6 +32,10 @@ const Teacher = () => {
     navigate("/enseignant/jury-soutenances");
   };
 
+  const handleMonProfilEnseignant = () => {
+    navigate("/enseignant/profil");
+  };
+
   return (
     <div className="enseignant-container">
       <button onClick={handleHomeClick} className="enseignant-home-button" title="Retour à l'accueil">
@@ -51,6 +55,14 @@ const Teacher = () => {
         </div>
 
         <div className="enseignant-modules-grid">
+          <div className="enseignant-module-card">
+            <h3> Mon Profil Enseignant</h3>
+            <p>Vue dashboard de toutes mes affectations</p>
+            <button className="enseignant-module-button" onClick={handleMonProfilEnseignant}>
+              Voir mon profil
+            </button>
+          </div>
+
           <div className="enseignant-module-card">
             <h3> Mes Modules</h3>
             <p>Gérer les modules qui me sont affectés</p>

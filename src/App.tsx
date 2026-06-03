@@ -17,6 +17,7 @@ import MyModules from "./pages/enseignant/MyModules";
 import EncadrementStages from "./pages/enseignant/EncadrementStages";
 import EvaluationRapports from "./pages/enseignant/EvaluationRapports";
 import JurySoutenance from "./pages/enseignant/JurySoutenance";
+import MonProfilEnseignant from "./pages/enseignant/MonProfilEnseignant";
 import MonProfilAcademique from "./pages/apprenant/MonProfilAcademique";
 import MesStagesRapports from "./pages/apprenant/MesStagesRapports";
 import MesResultats from "./pages/apprenant/MesResultats";
@@ -145,6 +146,15 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <EvaluationRapports />
+                            </ProtectedRoute>
+                        }
+                    />
+
+                    <Route
+                        path="/enseignant/profil"
+                        element={
+                            <ProtectedRoute>
+                                <MonProfilEnseignant />
                             </ProtectedRoute>
                         }
                     />
