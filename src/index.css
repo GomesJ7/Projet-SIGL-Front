@@ -63,6 +63,20 @@
 
 body {
   margin: 0;
+  transition: all 0.3s ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button {
+  outline: none;
+  border: none;
+}
+
+button:active {
+  transform: scale(0.98);
 }
 
 h1,
