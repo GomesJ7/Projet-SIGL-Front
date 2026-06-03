@@ -80,6 +80,88 @@
   color: #333;
 }
 
+.enseignant-dashboard-error {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #b42318;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.enseignant-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.enseignant-dashboard-kpi {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.enseignant-dashboard-kpi-label {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.enseignant-dashboard-kpi-value {
+  margin: 8px 0 0;
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.enseignant-dashboard-sections {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.enseignant-dashboard-card {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.enseignant-dashboard-card h3 {
+  margin-top: 0;
+}
+
+.enseignant-dashboard-card-full {
+  grid-column: 1 / -1;
+}
+
+.enseignant-dashboard-list {
+  display: grid;
+  gap: 8px;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.enseignant-dashboard-item {
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #007bff;
+  border-radius: 8px;
+  padding: 10px;
+  background: #f8fbff;
+}
+
+.enseignant-dashboard-item p {
+  margin: 4px 0;
+}
+
+.enseignant-dashboard-loading {
+  color: #475569;
+  margin-bottom: 16px;
+}
+
 .enseignant-modules-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -133,6 +215,10 @@
   .enseignant-modules-grid {
     grid-template-columns: 1fr;
     gap: 15px;
+  }
+
+  .enseignant-dashboard-sections {
+    grid-template-columns: 1fr;
   }
 
   .enseignant-module-card {
